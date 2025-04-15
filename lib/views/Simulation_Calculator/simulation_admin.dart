@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/views/Simulation_Calculator/logic_calculator.dart';
+import 'package:loan_application_admin/widgets/app_button.dart';
 
 class SimulationAdmin extends StatefulWidget {
   const SimulationAdmin({super.key});
@@ -19,21 +21,36 @@ class _SimulationAdminState extends State<SimulationAdmin> {
   double _totalInterest = 0.0;
   double _totalPayment = 0.0;
   String _loanType = 'Anuitas';
+  int finalMonthlyPayment = 0;
   List<Map<String, dynamic>> _repaymentSchedule = [];
+  final currencyFormat =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+
+  double roundUpToNearestHundred(double value) {
+  return ((value + 99) ~/ 100) * 100;
+  }
 
   void _calculateLoan() {
     if (_loanAmountController.text.isEmpty ||
         _loanTermController.text.isEmpty ||
         _interestRateController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Semua input harus diisi')),
+        const SnackBar(
+          content: Text('Semua input harus diisi'),
+          duration: Duration(seconds: 1),
+        ),
       );
       return;
     }
 
-    final double loanAmount = NumberFormat.decimalPattern().parse(_loanAmountController.text).toDouble();
+    final double loanAmount = NumberFormat.decimalPattern()
+        .parse(_loanAmountController.text)
+        .toDouble();
     final int loanTerm = int.parse(_loanTermController.text);
-    final double annualInterestRate = NumberFormat.decimalPattern().parse(_interestRateController.text).toDouble() / 100;
+    final double annualInterestRate = NumberFormat.decimalPattern()
+            .parse(_interestRateController.text)
+            .toDouble() /
+        100;
 
     final result = LoanCalculator.calculateLoan(
       loanAmount: loanAmount,
@@ -43,7 +60,7 @@ class _SimulationAdminState extends State<SimulationAdmin> {
     );
 
     setState(() {
-      _monthlyPayment = result['monthlyPayment'];
+     _monthlyPayment = roundUpToNearestHundred(result['monthlyPayment']);
       _totalInterest = result['totalInterest'];
       _totalPayment = result['totalPayment'];
       _repaymentSchedule = result['repaymentSchedule'];
@@ -52,9 +69,26 @@ class _SimulationAdminState extends State<SimulationAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    double totalPrincipal = 0;
+    double totalInterest = 0;
+    double totalPayment = 0;
+
+    for (var schedule in _repaymentSchedule) {
+      totalPrincipal += schedule['principalPayment'];
+      totalInterest += schedule['interestPayment'];
+      totalPayment += schedule['totalPayment'];
+    }
+
     return Scaffold(
+      backgroundColor: AppColors.pureWhite,
       appBar: AppBar(
-        title: const Text('Simulasi Kredit'),
+        backgroundColor: AppColors.pureWhite,
+        title: Center(
+          child: const Text(
+            'Simulasi Kredittt',
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -71,12 +105,35 @@ class _SimulationAdminState extends State<SimulationAdmin> {
                 prefixText: 'Rp ',
               ),
             ),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _loanAmountController,
+              builder: (context, value, child) {
+                String amount = value.text.isEmpty ? '0' : value.text;
+                try {
+                  return Text(
+                    'Jumlah Pinjaman: Rp ${NumberFormat.decimalPattern().format(NumberFormat.decimalPattern().parse(amount))}',
+                  );
+                } catch (e) {
+                  return Text('Jumlah Pinjaman: Rp 0');
+                }
+              },
+            ),
             TextField(
               controller: _loanTermController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Lama Peminjaman (bulan)',
               ),
+            ),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _loanTermController,
+              builder: (context, value, child) {
+                String months = value.text.isEmpty ? '0' : value.text;
+                double years = double.tryParse(months) ?? 0 / 12;
+                return Text(
+                  'Lama Peminjaman: $months bulan (${(years / 12).toStringAsFixed(1)} tahun)',
+                );
+              },
             ),
             TextField(
               controller: _interestRateController,
@@ -87,6 +144,20 @@ class _SimulationAdminState extends State<SimulationAdmin> {
               decoration: const InputDecoration(
                 labelText: 'Bunga/Tahun (%)',
               ),
+            ),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _interestRateController,
+              builder: (context, value, child) {
+                String rate = value.text.isEmpty ? '0' : value.text;
+                try {
+                  double annualRate =
+                      NumberFormat.decimalPattern().parse(rate).toDouble();
+                  return Text(
+                      'Bunga/Bulan: ${(annualRate / 12).toStringAsFixed(2)}%');
+                } catch (e) {
+                  return Text('Bunga/Bulan: 0%');
+                }
+              },
             ),
             DropdownButton<String>(
               value: _loanType,
@@ -111,7 +182,7 @@ class _SimulationAdminState extends State<SimulationAdmin> {
                 final DateTime? picked = await showDatePicker(
                   context: context,
                   initialDate: _startDate,
-                  firstDate: DateTime(2000),
+                  firstDate: DateTime.now(),
                   lastDate: DateTime(2101),
                 );
                 if (picked != null && picked != _startDate) {
@@ -121,26 +192,41 @@ class _SimulationAdminState extends State<SimulationAdmin> {
                 }
               },
             ),
-            ElevatedButton(
+            CustomButton(
+              paddingHorizontal: BorderSide.strokeAlignCenter,
+              paddingVertical: BorderSide.strokeAlignCenter,
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
               onPressed: _calculateLoan,
-              child: const Text('Kalkulasi'),
+              text: 'Hitung',
+              color: AppColors.deepBlue,
+              borderRadius: 8,
             ),
             const SizedBox(height: 20),
             if (_monthlyPayment > 0)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Jumlah Pinjaman: Rp ${NumberFormat.decimalPattern().format(NumberFormat.decimalPattern().parse(_loanAmountController.text))}'),
+                  Text(
+                      'Jumlah Pinjaman: Rp ${NumberFormat.decimalPattern().format(NumberFormat.decimalPattern().parse(_loanAmountController.text))}'),
                   Text('Lama Peminjaman: ${_loanTermController.text} bulan'),
                   Text('Jenis: $_loanType'),
-                  Text('Bunga per bulan: ${(NumberFormat.decimalPattern().parse(_interestRateController.text) / 12).toStringAsFixed(2)}%'),
+                  Text(
+                      'Bunga per bulan: ${(NumberFormat.decimalPattern().parse(_interestRateController.text) / 12).toStringAsFixed(2)}%'),
                   Text('Bunga per tahun: ${_interestRateController.text}%'),
-                  Text('Mulai Meminjam: ${DateFormat.yMMMMd().format(_startDate)}'),
+                  Text(
+                      'Mulai Meminjam: ${DateFormat.yMMMMd().format(_startDate)}'),
                   const SizedBox(height: 20),
-                  Text('Angsuran: Rp ${_monthlyPayment.toStringAsFixed(2)}'),
-                  Text('Total Bunga: Rp ${_totalInterest.toStringAsFixed(2)}'),
-                  Text('Total yang Dibayarkan: Rp ${_totalPayment.toStringAsFixed(2)}'),
-                  Text('Tanggal Lunas: ${DateFormat.yMMMMd().format(_startDate.add(Duration(days: 30 * int.parse(_loanTermController.text))))}'),
+                  Text(
+                      'Angsuran per bulan: ${currencyFormat.format(_monthlyPayment)}'),
+                  Text('Total Bunga: ${currencyFormat.format(_totalInterest)}'),
+                  Text(
+                      'Total yang Dibayarkan: ${currencyFormat.format(_totalPayment)}'),
+                  Text(
+                      'Tanggal Lunas: ${DateFormat.yMMMMd().format(_startDate.add(Duration(days: 30 * int.parse(_loanTermController.text))))}'),
                   const SizedBox(height: 20),
                   const Text('Simulasi Angsuran:'),
                   SingleChildScrollView(
@@ -153,15 +239,31 @@ class _SimulationAdminState extends State<SimulationAdmin> {
                         DataColumn(label: Text('Angsuran Pokok')),
                         DataColumn(label: Text('Saldo Pinjaman')),
                       ],
-                      rows: _repaymentSchedule.map((schedule) {
-                        return DataRow(cells: [
-                          DataCell(Text(schedule['month'].toString())),
-                          DataCell(Text('Rp ${schedule['totalPayment'].toStringAsFixed(2)}')),
-                          DataCell(Text('Rp ${schedule['interestPayment'].toStringAsFixed(2)}')),
-                          DataCell(Text('Rp ${schedule['principalPayment'].toStringAsFixed(2)}')),
-                          DataCell(Text('Rp ${schedule['remainingBalance'].toStringAsFixed(2)}')),
-                        ]);
-                      }).toList(),
+                      rows: [
+                        ..._repaymentSchedule.map((schedule) {
+                          return DataRow(cells: [
+                            DataCell(Text(schedule['month'].toString())),
+                            DataCell(Text(
+                                'Rp ${NumberFormat.decimalPattern().format(NumberFormat.decimalPattern().parse(schedule['totalPayment'].toStringAsFixed(2)))}')),
+                            DataCell(Text(
+                                'Rp ${NumberFormat.decimalPattern().format(NumberFormat.decimalPattern().parse(schedule['interestPayment'].toStringAsFixed(2)))}')),
+                            DataCell(Text(
+                                'Rp ${NumberFormat.decimalPattern().format(NumberFormat.decimalPattern().parse(schedule['principalPayment'].toStringAsFixed(2)))}')),
+                            DataCell(Text(
+                                'Rp ${NumberFormat.decimalPattern().format(NumberFormat.decimalPattern().parse(schedule['remainingBalance'].toStringAsFixed(2)))}')),
+                          ]);
+                        }).toList(),
+                        DataRow(cells: [
+                          const DataCell(Text('Total')),
+                          DataCell(Text(
+                              'Rp ${NumberFormat.decimalPattern().format(totalPayment)}')),
+                          DataCell(Text(
+                              'Rp ${NumberFormat.decimalPattern().format(totalInterest)}')),
+                          DataCell(Text(
+                              'Rp ${NumberFormat.decimalPattern().format(totalPrincipal)}')),
+                          const DataCell(Text('')),
+                        ]),
+                      ],
                     ),
                   ),
                 ],
