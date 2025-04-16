@@ -54,7 +54,7 @@ class _ProfileAdminState extends State<ProfileAdmin> {
                   ),
                   SizedBox(height: 10),
                   CustomText(
-                    text: 'User',
+                    text: 'Admin',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Outfit',
