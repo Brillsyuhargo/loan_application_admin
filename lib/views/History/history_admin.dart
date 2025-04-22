@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
-import 'package:loan_application_admin/widgets/filter_button.dart';
+import 'package:loan_application_admin/widgets/History/filter_button.dart';
 import 'package:loan_application_admin/widgets/searchbar.dart';
 import 'package:loan_application_admin/widgets/survey_box.dart';
 
@@ -64,13 +64,18 @@ class _HistoryAdminState extends State<HistoryAdmin> {
     });
   }
 
-  void filterByStatus(String status) {
-    setState(() {
+void filterByStatus(String status) {
+  setState(() {
+    if (status == 'ALL') {
+      filteredList = historyEmployee;
+    } else {
       filteredList = historyEmployee
           .where((item) => item['status'] == status)
           .toList();
-    });
-  }
+    }
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {

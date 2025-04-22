@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
-import 'package:loan_application_admin/views/History/showfilterbuttom.dart';
+import 'package:loan_application_admin/widgets/History/showfilterbuttom.dart';
 
 class FilterButtons extends StatelessWidget {
   final Function(String) onFilterSelected;
@@ -17,6 +17,9 @@ class FilterButtons extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
+                SizedBox(width: 5),
+                _buildButton('ALL'),
+                SizedBox(width: 5),
                 _buildButton('ACCEPTED'),
                 SizedBox(width: 5),
                 _buildButton('DECLINED'),
