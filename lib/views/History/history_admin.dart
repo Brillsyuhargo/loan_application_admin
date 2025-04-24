@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
+
 import 'package:loan_application_admin/views/SurveyList/home_controller.dart';
 import 'package:loan_application_admin/widgets/History/filter_button.dart';
 import 'package:loan_application_admin/widgets/searchbar.dart';
@@ -62,8 +62,9 @@ class _HistoryAdminState extends State<HistoryAdmin> {
                   final item = _controller.filteredList[index];
                   return SurveyBox(
                     name: item.fullName,
-                    date: item.application.trxDate,
-                    location: item.village,
+                    date: DateFormat('yyyy-MM-dd')
+                        .format(item.application.trxDate),
+                    location: item.sectorCity,
                     status: "UNREAD",
                     image: 'assets/images/bg.png',
                     statusColor: _controller.getStatusColor("UNREAD"),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/routes/my_app_route.dart';
 import 'package:loan_application_admin/views/SurveyList/home_controller.dart';
 import 'package:loan_application_admin/widgets/survey_box.dart';
+
 
 class SurveyList extends StatefulWidget {
   const SurveyList({super.key});
@@ -57,8 +59,9 @@ class _SurveyListState extends State<SurveyList> {
                   final item = controller.surveyList[index];
                   return SurveyBox(
                     name: item.fullName,
-                    date: item.application.trxDate.split('.').first,
-                    location: item.region,
+                    date: DateFormat('yyyy-MM-dd')
+                        .format(item.application.trxDate),
+                    location: item.sectorCity,
                     status: "UNREAD",
                     image: 'assets/images/bg.png',
                     statusColor: controller.getStatusColor("UNREAD"),
@@ -68,6 +71,26 @@ class _SurveyListState extends State<SurveyList> {
             }),
           ),
         ],
+      ),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.all(13.0),
+          child: GestureDetector(
+            onTap: () => Get.toNamed(MyAppRoutes.inputDataScreen),
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 4, 73, 130),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: const Center(
+                child: Icon(Icons.add, color: Colors.white, size: 40),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
