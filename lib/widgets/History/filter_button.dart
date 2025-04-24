@@ -11,35 +11,42 @@ class FilterButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 310,
+        Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 _buildButton('ALL'),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 _buildButton('ACCEPTED'),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 _buildButton('DECLINED'),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 _buildButton('UNREAD'),
+                const SizedBox(width: 10),
               ],
             ),
           ),
         ),
-        ElevatedButton(
-          onPressed: () => showFilterBottomSheet(context, onFilterSelected),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.pureWhite,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+        Container(
+          margin: const EdgeInsets.only(right: 8),
+          child: ElevatedButton(
+            onPressed: () => showFilterBottomSheet(context, onFilterSelected),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.pureWhite,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(12), // biar tombol nggak terlalu kecil
+            ),
+            child: Icon(
+              Icons.filter_list_alt,
+              size: 25,
+              color: AppColors.blackLight,
             ),
           ),
-          child: Icon(Icons.filter_list_alt,
-              size: 25, color: AppColors.blackLight),
         ),
       ],
     );
@@ -57,7 +64,7 @@ class FilterButtons extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text(text, style: TextStyle(fontSize: 12)),
+        child: Text(text, style: const TextStyle(fontSize: 12)),
       ),
     );
   }

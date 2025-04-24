@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loan_application_admin/views/History/history_admin.dart';
 import 'package:loan_application_admin/views/Profile/profile_admin.dart';
-import 'package:loan_application_admin/views/Simulation_Calculator/simulation_employee.dart';
-import 'package:loan_application_admin/views/SurveyList/surveylist_admin.dart';
+import 'package:loan_application_admin/views/Simulation_Calculator/simulation_admin.dart';
 import 'package:loan_application_admin/controller/admin/controller_page_admin.dart';
+import 'package:loan_application_admin/views/SurveyList/surveylisy_admin.dart';
 
 import '../../../core/theme/color.dart';
 
@@ -18,7 +18,7 @@ class DashboardPageAdmin extends StatelessWidget {
         Get.put(ControllerPageAdmin());
 
     final List<Widget> menus = [
-      SurveylistAdmin(),
+      SurveyList(),
       HistoryAdmin(),
       SimulationAdmin(),
       ProfileAdmin()

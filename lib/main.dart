@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:loan_application_admin/API/dio/dio_client.dart';
 import 'package:loan_application_admin/Bindings/bindings.dart';
 import 'package:loan_application_admin/routes/my_app_page.dart';
 import 'package:loan_application_admin/routes/my_app_route.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
+  await DioClient.init();
   runApp(MyApp());
 }
 

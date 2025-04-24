@@ -7,7 +7,6 @@ import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/widgets/app_button.dart';
 import 'package:loan_application_admin/widgets/text_field.dart';
 
-
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -17,7 +16,7 @@ class LoginScreen extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
 
     // Use GetX controller with lazy initialization
-    final LoginController loginController = Get.find<LoginController>();
+    final LoginControllers loginController = Get.find<LoginControllers>();
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
