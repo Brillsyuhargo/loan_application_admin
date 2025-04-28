@@ -107,6 +107,8 @@ class Application {
       plafond: json['plafond'] ?? '0',
     );
   }
+
+  get status => null;
 }
 
 class Collateral {

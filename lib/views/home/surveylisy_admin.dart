@@ -4,34 +4,22 @@ import 'package:intl/intl.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/routes/my_app_route.dart';
 import 'package:loan_application_admin/views/home/home_controller.dart';
-import 'package:loan_application_admin/widgets/History/filter_button.dart';
-import 'package:loan_application_admin/widgets/History/searchbar.dart';
 import 'package:loan_application_admin/widgets/survey_box.dart';
 
-class HistoryAdmin extends StatefulWidget {
-  const HistoryAdmin({super.key});
+class SurveyList extends StatefulWidget {
+  const SurveyList({super.key});
 
   @override
-  State<HistoryAdmin> createState() => _HistoryAdminState();
+  _SurveyListState createState() => _SurveyListState();
 }
 
-class _HistoryAdminState extends State<HistoryAdmin> {
+class _SurveyListState extends State<SurveyList> {
   final HomeController controller = Get.put(HomeController());
-  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    controller.getHistory(); // Fetch history data
-    searchController.addListener(() {
-      controller.filterSearch(searchController.text);
-    });
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
+    controller.getHistory(); // Fetch dynamic history list
   }
 
   @override
@@ -40,33 +28,40 @@ class _HistoryAdminState extends State<HistoryAdmin> {
       backgroundColor: AppColors.pureWhite,
       body: Column(
         children: [
-          const SizedBox(height: 30),
-          CustomSearchBar(
-            controller: searchController,
-            onChanged: (query) => controller.filterSearch(query),
-          ),
-          FilterButtons(
-            onFilterSelected: (status) => controller.filterByStatus(status),
+          const SizedBox(height: 20),
+          Container(
+            width: double.infinity,
+            height: 57,
+            color: Colors.white,
+            child: const Center(
+              child: Text(
+                'Survey List',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontFamily: 'Outfit',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
           ),
           Expanded(
             child: RefreshIndicator(
-              color: AppColors.black,
+              color: AppColors.black, 
               backgroundColor: Colors.white,
               onRefresh: () async {
                 await Future(() => controller.getHistory());
               },
               child: Obx(() {
-                if (controller.filteredList.isEmpty) {
-                  return const Center(
-                    child: Text('No history found'),
-                  );
+                final list = controller.surveyList;
+                if (list.isEmpty) {
+                  return const Center(child: Text('No survey data available.'));
                 }
-
                 return ListView.builder(
                   padding: const EdgeInsets.all(10),
-                  itemCount: controller.filteredList.length,
+                  itemCount: list.length,
                   itemBuilder: (context, index) {
-                    final item = controller.filteredList[index];
+                    final item = list[index];
                     return GestureDetector(
                       onTap: () => Get.toNamed(
                         MyAppRoutes.surveyDetail,

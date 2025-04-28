@@ -4,7 +4,6 @@ import 'package:loan_application_admin/API/models/history_models.dart';
 import 'package:loan_application_admin/API/service/post_history.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
 
-
 class HomeController extends GetxController {
   var surveyList = <Datum>[].obs;
   var filteredList = <Datum>[].obs;
@@ -19,7 +18,7 @@ class HomeController extends GetxController {
         toDateTime: DateTime.parse('2025-12-31T00:00:00+07:00'),
       );
 
-      print( response.data);
+      print(response.data);
       // Parse the response into a HistoryResponse object
       final historyResponse = HistoryResponse.fromJson(response.data);
 
@@ -46,8 +45,12 @@ class HomeController extends GetxController {
   }
 
   void filterByStatus(String status) {
+    if (status == 'ALL') {
+      filteredList.value = surveyList;
+      return;
+    }
     filteredList.value =
-        surveyList.where((item) => item.application.purpose == status).toList();
+        surveyList.where((item) => "UNREAD" == status).toList();
   }
 
   Color getStatusColor(String status) {
