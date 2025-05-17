@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:loan_application_admin/API/models/history_models.dart';
 import 'package:loan_application_admin/API/service/post_history.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
@@ -35,31 +36,44 @@ class HomeController extends GetxController {
   }
 
   void filterSearch(String query) {
-    filteredList.value = surveyList
-        .where((item) =>
-            item.fullName.toLowerCase().contains(query.toLowerCase()) ||
-            item.application.purpose
-                .toLowerCase()
-                .contains(query.toLowerCase()))
-        .toList();
+    filteredList.value = surveyList.where((item) {
+      final queryLower = query.toLowerCase();
+      final fullName = item.fullName.toLowerCase();
+      final purpose = item.application.purpose.toLowerCase();
+      final trx_survey = item.application.trxSurvey.toString().toLowerCase();
+      final aged = item.aged.toString().toLowerCase();
+      final date = DateFormat('yyyy-MM-dd')
+          .format(item.application.trxDate)
+          .toLowerCase();
+
+      return fullName.contains(queryLower) ||
+          purpose.contains(queryLower) ||
+          trx_survey.contains(queryLower) ||
+          aged.contains(queryLower) ||
+          date.contains(queryLower);
+    }).toList();
   }
 
   void filterByStatus(String status) {
-    if (status == 'ALL') {
-      filteredList.value = surveyList;
-      return;
-    }
-    filteredList.value =
-        surveyList.where((item) => "UNREAD" == status).toList();
+    print('FILTER BY STATUS: $status');
+
+    filteredList.value = surveyList.where((item) {
+      final statusText = item.status?.value ?? item.application.toString();
+      print('Actual item status: ${statusText.toUpperCase()}');
+
+      return status.toUpperCase() == 'ALL'
+          ? true
+          : statusText.toUpperCase() == status.toUpperCase();
+    }).toList();
   }
 
   Color getStatusColor(String status) {
     switch (status.toUpperCase()) {
-      case 'ACCEPTED':
+      case 'DISETUJUI':
         return AppColors.greenstatus;
-      case 'DECLINED':
+      case 'DITOLAK':
         return AppColors.redstatus;
-      case 'UNREAD':
+      case 'PROCES':
         return AppColors.orangestatus;
       default:
         return Colors.grey;

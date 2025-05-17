@@ -11,61 +11,56 @@ class FilterButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // Bagian tombol scrollable horizontal
         Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                const SizedBox(width: 5),
+                const SizedBox(width: 8), // Padding awal
                 _buildButton('ALL'),
-                const SizedBox(width: 5),
-                _buildButton('ACCEPTED'),
-                const SizedBox(width: 5),
-                _buildButton('DECLINED'),
-                const SizedBox(width: 5),
-                _buildButton('UNREAD'),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
+                _buildButton('DITERIMA'),
+                const SizedBox(width: 8),
+                _buildButton('DITOLAK'),
+                const SizedBox(width: 8),
+                _buildButton('PROSES'),
+                const SizedBox(width: 8),
               ],
             ),
           ),
         ),
-        Container(
-          margin: const EdgeInsets.only(right: 8),
-          child: ElevatedButton(
-            onPressed: () => showFilterBottomSheet(context, onFilterSelected),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.pureWhite,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.all(12), // biar tombol nggak terlalu kecil
-            ),
-            child: Icon(
-              Icons.filter_list_alt,
-              size: 25,
-              color: AppColors.blackLight,
+
+        // Tombol filter icon
+        const SizedBox(width: 8),
+        ElevatedButton(
+          onPressed: () => showFilterBottomSheet(context, onFilterSelected),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.pureWhite,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
+          child: Icon(Icons.filter_list_alt,
+              size: 25, color: AppColors.blackLight),
         ),
       ],
     );
   }
 
   Widget _buildButton(String text) {
-    return SizedBox(
-      width: 109,
-      child: ElevatedButton(
-        onPressed: () => onFilterSelected(text),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.pureWhite,
-          foregroundColor: AppColors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+    return ElevatedButton(
+      onPressed: () => onFilterSelected(text),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.pureWhite,
+        foregroundColor: AppColors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-        child: Text(text, style: const TextStyle(fontSize: 12)),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
       ),
+      child: Text(text, style: const TextStyle(fontSize: 12)),
     );
   }
 }
