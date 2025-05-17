@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loan_application_admin/views/SurveyList/detail_controller.dart';
+import 'package:loan_application_admin/views/SurveyDetail/inqury_survey_controller.dart';
 
-class CollateralProofWidget extends StatelessWidget {
-  final DetailController controller = Get.find<DetailController>();
+class Category_agunan extends StatelessWidget {
+  final InqurySurveyController controller = Get.find<InqurySurveyController>();
+
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
+    return Obx(() => SizedBox(
           width: 317,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Bukti Jaminan',
+                'Categry Agunan',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 16,
                   fontFamily: 'Outfit',
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
@@ -68,7 +69,8 @@ class CollateralProofWidget extends StatelessWidget {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

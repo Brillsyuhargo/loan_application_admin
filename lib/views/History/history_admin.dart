@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/routes/my_app_route.dart';
 import 'package:loan_application_admin/views/home/home_controller.dart';
@@ -56,30 +57,35 @@ class _HistoryAdminState extends State<HistoryAdmin> {
                 await Future(() => controller.getHistory());
               },
               child: Obx(() {
-                if (controller.filteredList.isEmpty) {
-                  return const Center(
-                    child: Text('No history found'),
-                  );
+                final list = controller.filteredList;
+                if (list.isEmpty) {
+                  return const Center(child: Text('No survey data available.'));
                 }
-
                 return ListView.builder(
                   padding: const EdgeInsets.all(10),
-                  itemCount: controller.filteredList.length,
+                  itemCount: list.length,
                   itemBuilder: (context, index) {
-                    final item = controller.filteredList[index];
+                    final item = list[index];
+                    final statusText =
+                        item.status?.value ?? item.application.toString();
+                    final statusColor = controller.getStatusColor(statusText);
+
                     return GestureDetector(
                       onTap: () => Get.toNamed(
-                        MyAppRoutes.surveyDetail,
-                        arguments: item,
+                        MyAppRoutes.surveyDetail,arguments: item
+// Convert to String for navigation
                       ),
                       child: SurveyBox(
                         name: item.fullName,
+                        aged: item.aged,
+                        location: item.sectorCity,
+                        plafond: item.application.plafond,
+                        trx_survey: item.application.trxSurvey,
                         date: DateFormat('yyyy-MM-dd')
                             .format(item.application.trxDate),
-                        location: item.sectorCity,
-                        status: "UNREAD",
                         image: 'assets/images/bg.png',
-                        statusColor: controller.getStatusColor("UNREAD"),
+                        status: statusText,
+                        statusColor: statusColor,
                       ),
                     );
                   },

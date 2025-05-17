@@ -5,7 +5,7 @@ import 'package:loan_application_admin/views/History/history_admin.dart';
 import 'package:loan_application_admin/views/Profile/profile_admin.dart';
 import 'package:loan_application_admin/views/Simulation_Calculator/simulation_admin.dart';
 import 'package:loan_application_admin/controller/admin/controller_page_admin.dart';
-import 'package:loan_application_admin/views/home/surveylisy_admin.dart';
+import 'package:loan_application_admin/views/home/surveylist_admin.dart';
 
 import '../../../core/theme/color.dart';
 

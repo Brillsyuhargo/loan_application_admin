@@ -3,8 +3,9 @@ import 'package:loan_application_admin/Login/loginScreen.dart';
 import 'package:loan_application_admin/navbar/admin/dashboard_page_admin.dart';
 import 'package:loan_application_admin/routes/my_app_route.dart';
 import 'package:loan_application_admin/splash_screen.dart';
-import 'package:loan_application_admin/views/SurveyList/detail.dart';
-import 'package:loan_application_admin/views/home/surveylisy_admin.dart';
+import 'package:loan_application_admin/views/SurveyDetail/detail_anggota.dart';
+import 'package:loan_application_admin/views/SurveyDetail/detail_documen.dart';
+import 'package:loan_application_admin/views/home/surveylist_admin.dart';
 
 class MyAppPage {
   static final List<GetPage> pages = [
@@ -14,5 +15,6 @@ class MyAppPage {
     GetPage(name: MyAppRoutes.dashboard, page: () => DashboardPageAdmin()),
     GetPage(name: MyAppRoutes.homeScreen, page: () => SurveyList()),
     GetPage(name: MyAppRoutes.surveyDetail, page: () => SurveyDetail()),
+    GetPage(name: MyAppRoutes.detaildocumen, page: () => DetailDocumen()),
   ];
 }

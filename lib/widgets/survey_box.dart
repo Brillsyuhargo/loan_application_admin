@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:loan_application_admin/core/theme/color.dart';
 
 class SurveyBox extends StatelessWidget {
   final String name;
+  final String aged;
+  final String plafond;
   final String date;
   final String location;
+  final String trx_survey;
   final String status;
   final String image;
   final Color statusColor;
@@ -11,7 +15,10 @@ class SurveyBox extends StatelessWidget {
   const SurveyBox({
     super.key,
     required this.name,
+    required this.aged,
+    required this.plafond,
     required this.date,
+    required this.trx_survey,
     required this.location,
     required this.status,
     required this.image,
@@ -20,10 +27,12 @@ class SurveyBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isNetworkImage = image.startsWith('http');
+
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.pureWhite,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -35,73 +44,165 @@ class SurveyBox extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Gambar
           Container(
             width: 100,
             height: 100,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10),
                 bottomLeft: Radius.circular(10),
               ),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10),
                 bottomLeft: Radius.circular(10),
               ),
-              child: Image.asset(
-                image,
-                fit: BoxFit.cover,
+              child: isNetworkImage
+                  ? Image.network(
+                      image,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.broken_image),
+                    )
+                  : Image.asset(
+                      image,
+                      fit: BoxFit.cover,
+                    ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Informasi utama
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // Di dalam Column(...) yang ada di child dari Expanded(...)
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      color: AppColors.black,
+                      fontSize: 14,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w700,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today,
+                          color: AppColors.black, size: 12),
+                      const SizedBox(width: 5),
+                      Text(
+                        date,
+                        style: TextStyle(
+                          color: AppColors.black.withOpacity(0.6),
+                          fontSize: 10,
+                          fontFamily: 'Outfit',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.person,
+                          color: AppColors.black, size: 12),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          aged,
+                          style: const TextStyle(
+                            color: AppColors.black,
+                            fontSize: 10,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w400,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.account_balance,
+                          color: AppColors.black, size: 12),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          plafond,
+                          style: const TextStyle(
+                            color: AppColors.black,
+                            fontSize: 10,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w400,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.assignment,
+                          color: AppColors.black, size: 12),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          trx_survey,
+                          style: const TextStyle(
+                            color: AppColors.black,
+                            fontSize: 10,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w400,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on,
+                          color: AppColors.black, size: 12),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          location,
+                          style: const TextStyle(
+                            color: AppColors.black,
+                            fontSize: 10,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w400,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: TextStyle(
-                    color: Color(0xFF364F6B),
-                    fontSize: 14,
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  date,
-                  style: TextStyle(
-                    color: Color(0xFF364F6B).withOpacity(0.6),
-                    fontSize: 10,
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.location_on, color: Color(0xFF00274F), size: 12),
-                    SizedBox(width: 5),
-                    Text(
-                      location,
-                      style: TextStyle(
-                        color: Color(0xFF00274F),
-                        fontSize: 10,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          // Status
           Container(
             width: 54,
             height: 100,
             decoration: BoxDecoration(
               color: statusColor,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(10),
                 bottomRight: Radius.circular(10),
               ),
@@ -110,13 +211,15 @@ class SurveyBox extends StatelessWidget {
               child: RotatedBox(
                 quarterTurns: 3,
                 child: Text(
-                  status,
-                  style: TextStyle(
-                    color: Colors.white,
+                  status.isEmpty ? 'No Status' : status,
+                  style: const TextStyle(
+                    color: AppColors.pureWhite,
                     fontSize: 14,
                     fontFamily: 'Outfit',
                     fontWeight: FontWeight.w700,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
