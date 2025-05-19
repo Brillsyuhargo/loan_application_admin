@@ -42,15 +42,12 @@ class HomeController extends GetxController {
       final purpose = item.application.purpose.toLowerCase();
       final trx_survey = item.application.trxSurvey.toString().toLowerCase();
       final aged = item.aged.toString().toLowerCase();
-      final date = DateFormat('yyyy-MM-dd')
-          .format(item.application.trxDate)
-          .toLowerCase();
+    
 
       return fullName.contains(queryLower) ||
           purpose.contains(queryLower) ||
           trx_survey.contains(queryLower) ||
-          aged.contains(queryLower) ||
-          date.contains(queryLower);
+          aged.contains(queryLower);
     }).toList();
   }
 

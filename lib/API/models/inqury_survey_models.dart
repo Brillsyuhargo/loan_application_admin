@@ -243,6 +243,8 @@ class Collateral {
     );
   }
 
+  get type => null;
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

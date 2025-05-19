@@ -8,6 +8,7 @@ class InqurySurveyController extends GetxController {
   var plafond = ''.obs;
   var purpose = ''.obs;
   var adddescript = ''.obs;
+  var id_name = ''.obs;
   var value = ''.obs;
   var income = ''.obs;
   var asset = ''.obs;
@@ -33,6 +34,7 @@ class InqurySurveyController extends GetxController {
       inquiryModel.value = inquryResponse;
       plafond.value = inquryResponse.application.plafond;
       purpose.value = inquryResponse.application.purpose;
+      id_name.value = inquryResponse.collateral.idName;
       adddescript.value = inquryResponse.collateral.adddescript;
       value.value = inquryResponse.collateral.value;
       expenses.value = inquryResponse.additionalInfo.expenses;
@@ -40,12 +42,6 @@ class InqurySurveyController extends GetxController {
       asset.value = inquryResponse.additionalInfo.asset;
       installment.value = inquryResponse.additionalInfo.installment;
 
-      collateralProofs.add(CollateralProofModel(
-        date: inquryResponse.application.trxDate.toString(),
-        location: inquryResponse.sectorCity,
-        type: inquryResponse.collateral.documentType,
-        imagePath: 'assets/images/sample.png',
-      ));
     } catch (e) {
       errorMessage.value = 'Gagal mengambil data: $e';
       Get.snackbar('Error', errorMessage.value);
@@ -53,20 +49,4 @@ class InqurySurveyController extends GetxController {
       isLoading.value = false;
     }
   }
-}
-
-class CollateralProofModel {
-  final String date;
-  final String location;
-  final String type;
-  final String imagePath;
-  final String sector_city;
-
-  CollateralProofModel({
-    required this.date,
-    required this.location,
-    required this.type,
-    required this.imagePath,
-    this.sector_city = '',
-  });
 }

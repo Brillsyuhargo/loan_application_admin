@@ -43,23 +43,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Foto KTP
-            Center(
-              child: Container(
-                width: 317,
-                height: 198.02,
-                child: Opacity(
-                  opacity: 0.53,
-                  child: Image.asset(
-                    'assets/images/rawktp.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Data Pribadi
             Obx(() => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -139,7 +122,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () => Get.toNamed(MyAppRoutes.detaildocumen,
+                onPressed: () => Get.toNamed(MyAppRoutes.detailsurvey,
                     arguments: trxSurvey), // Pass the trx_survey value
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.casualbutton1,
