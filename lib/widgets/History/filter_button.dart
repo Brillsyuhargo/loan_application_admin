@@ -18,13 +18,25 @@ class FilterButtons extends StatelessWidget {
             child: Row(
               children: [
                 const SizedBox(width: 8), // Padding awal
-                _buildButton('ALL'),
+                _buildButton(
+                  'All',
+                  backgroundColor: AppColors.royalBlue,
+                ),
                 const SizedBox(width: 8),
-                _buildButton('DITERIMA'),
+                _buildButton(
+                  'Disetujui',
+                  backgroundColor: AppColors.greenstatus,
+                ),
                 const SizedBox(width: 8),
-                _buildButton('DITOLAK'),
+                _buildButton(
+                  'Proces',
+                  backgroundColor: AppColors.orangestatus,
+                ),
                 const SizedBox(width: 8),
-                _buildButton('PROSES'),
+                _buildButton(
+                  'Ditolak',
+                  backgroundColor: AppColors.redstatus,
+                ),
                 const SizedBox(width: 8),
               ],
             ),
@@ -49,12 +61,15 @@ class FilterButtons extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(String text) {
+  Widget _buildButton(String text,
+      {Color? backgroundColor, Color? foregroundColor}) {
     return ElevatedButton(
       onPressed: () => onFilterSelected(text),
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.pureWhite,
-        foregroundColor: AppColors.black,
+        backgroundColor:
+            backgroundColor ?? AppColors.pureWhite, // Fallback ke pureWhite
+        foregroundColor:
+            foregroundColor ?? AppColors.pureWhite, // Fallback ke black
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

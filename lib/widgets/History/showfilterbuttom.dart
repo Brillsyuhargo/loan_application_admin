@@ -127,8 +127,7 @@ void showFilterBottomSheet(
                                     selectedDateText =
                                         DateFormat('d MMMM y', 'id_ID')
                                             .format(picked);
-                                    selectedDate =
-                                        ''; 
+                                    selectedDate = '';
                                   });
                                 }
                               });
@@ -160,7 +159,7 @@ void showFilterBottomSheet(
                             },
                           ),
 
-                           SizedBox(height: 24),
+                          SizedBox(height: 24),
 
                           // Dropdown lokasi berjenjang
                           Obx(() {
@@ -237,7 +236,7 @@ void showFilterBottomSheet(
                             );
                           }),
 
-                         SizedBox(height: 30),
+                          SizedBox(height: 30),
 
                           // Footer Buttons
                           // Footer Buttons

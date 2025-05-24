@@ -2,7 +2,7 @@
     <application
         android:label="loan_application_admin"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/logo_ksp">
         <activity
             android:name=".MainActivity"
             android:exported="true"

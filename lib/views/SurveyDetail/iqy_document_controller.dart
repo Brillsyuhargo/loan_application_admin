@@ -5,10 +5,10 @@ import 'package:loan_application_admin/API/models/inqury_survey_models.dart';
 
 class IqyDocumentController extends GetxController {
   var ktpImage = ''.obs; // For KTP (docPerson)
-  var fotoTanah = ''.obs; // For Foto Tanah (docAsset)
-  var fotoSurat = ''.obs; 
-  var agunan = ''.obs; 
-  var asset = ''.obs; 
+  var imgDoc = ''.obs; // For Foto Tanah (docAsset)
+  var imgAgun = ''.obs;
+  var agunan = ''.obs;
+  var asset = ''.obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var adddescript = ''.obs;
@@ -32,10 +32,10 @@ class IqyDocumentController extends GetxController {
       ktpImage.value = documentModel.value?.docPerson.isNotEmpty ?? false
           ? documentModel.value!.docPerson[0].img
           : '';
-      fotoTanah.value = documentModel.value?.docAsset.isNotEmpty ?? false
+      imgDoc.value = documentModel.value?.docAsset.isNotEmpty ?? false
           ? documentModel.value!.docAsset[0].img
           : '';
-      fotoSurat.value = documentModel.value?.docImg.isNotEmpty ?? false
+      imgAgun.value = documentModel.value?.docImg.isNotEmpty ?? false
           ? documentModel.value!.docImg[0].img
           : '';
 

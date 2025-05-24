@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/routes/my_app_route.dart';
 import 'package:loan_application_admin/views/home/home_controller.dart';
@@ -71,10 +70,10 @@ class _HistoryAdminState extends State<HistoryAdmin> {
                     final statusColor = controller.getStatusColor(statusText);
 
                     return GestureDetector(
-                      onTap: () => Get.toNamed(
-                        MyAppRoutes.surveyDetail,arguments: item
+                      onTap: () =>
+                          Get.toNamed(MyAppRoutes.surveyDetail, arguments: item
 // Convert to String for navigation
-                      ),
+                              ),
                       child: SurveyBox(
                         name: item.fullName,
                         aged: item.aged,
@@ -83,7 +82,9 @@ class _HistoryAdminState extends State<HistoryAdmin> {
                         trx_survey: item.application.trxSurvey,
                         date: DateFormat('yyyy-MM-dd')
                             .format(item.application.trxDate),
-                        image: 'assets/images/bg.png',
+                        image: (item.document?.docPerson.isNotEmpty ?? false)
+                            ? item.document!.docPerson[0].img
+                            : 'https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png',
                         status: statusText,
                         statusColor: statusColor,
                       ),

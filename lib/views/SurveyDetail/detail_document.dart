@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/views/SurveyDetail/iqy_document_controller.dart';
 import 'package:loan_application_admin/widgets/custom_appbar.dart';
-import 'package:loan_application_admin/widgets/SurveyDetail/field_readonly.dart';
 
 class DetailDocument extends StatefulWidget {
   const DetailDocument({super.key});
@@ -20,13 +18,22 @@ class _DetailDocumentState extends State<DetailDocument> {
   void initState() {
     super.initState();
     final trxSurvey = Get.arguments;
-    documentController.fetchDocuments(trxSurvey: trxSurvey.toString());
+    if (trxSurvey != null && trxSurvey is String && trxSurvey.isNotEmpty) {
+      documentController.fetchDocuments(trxSurvey: trxSurvey);
+    } else {
+      documentController.errorMessage.value =
+          'trxSurvey tidak valid atau tidak ditemukan';
+      Get.snackbar('Error', documentController.errorMessage.value,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Explicitly set background to white
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: 'Detail Dokumen',
       ),
@@ -36,8 +43,27 @@ class _DetailDocumentState extends State<DetailDocument> {
         }
         if (documentController.errorMessage.value.isNotEmpty) {
           return Center(
-              child: Text(documentController.errorMessage.value,
-                  style: const TextStyle(color: Colors.red)));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  documentController.errorMessage.value,
+                  style: const TextStyle(color: Colors.red, fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    final trxSurvey = Get.arguments;
+                    if (trxSurvey != null && trxSurvey is String) {
+                      documentController.fetchDocuments(trxSurvey: trxSurvey);
+                    }
+                  },
+                  child: const Text('Coba Lagi'),
+                ),
+              ],
+            ),
+          );
         }
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -71,8 +97,7 @@ class _DetailDocumentState extends State<DetailDocument> {
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
                               documentController.ktpImage.value,
-                              fit: BoxFit
-                                  .fitWidth, // Maintain aspect ratio, fit to width
+                              fit: BoxFit.fitWidth,
                               width: double.infinity,
                               height: double.infinity,
                               errorBuilder: (context, error, stackTrace) =>
@@ -99,16 +124,13 @@ class _DetailDocumentState extends State<DetailDocument> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16), // Spacing before divider
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 16), // Spacing after divider
+              const SizedBox(height: 16),
+              const Divider(thickness: 1, color: Colors.grey),
+              const SizedBox(height: 16),
 
               // Agunan Section
-              Center(
-                child: const Text(
+              const Center(
+                child: Text(
                   'AGUNAN',
                   style: TextStyle(
                     fontSize: 16,
@@ -117,13 +139,10 @@ class _DetailDocumentState extends State<DetailDocument> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Foto Tanah Section
-              const SizedBox(height: 8),
               Center(
                 child: GestureDetector(
                   onTap: () => documentController
-                      .showFullScreenImage(documentController.fotoTanah.value),
+                      .showFullScreenImage(documentController.imgAgun.value),
                   child: Container(
                     width: 317,
                     height: 200,
@@ -131,13 +150,12 @@ class _DetailDocumentState extends State<DetailDocument> {
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: documentController.fotoTanah.value.isNotEmpty
+                    child: documentController.imgAgun.value.isNotEmpty
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              documentController.fotoTanah.value,
-                              fit: BoxFit
-                                  .cover, // Maintain aspect ratio, cover the container
+                              documentController.imgAgun.value,
+                              fit: BoxFit.cover,
                               width: double.infinity,
                               height: double.infinity,
                               errorBuilder: (context, error, stackTrace) =>
@@ -164,17 +182,14 @@ class _DetailDocumentState extends State<DetailDocument> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16), // Spacing before divider
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 16), // Spacing after divider
+              const SizedBox(height: 16),
+              const Divider(thickness: 1, color: Colors.grey),
+              const SizedBox(height: 16),
 
-              // BPKB Section
-              Center(
-                child: const Text(
-                  'DOCUMENT',
+              // Document Section
+              const Center(
+                child: Text(
+                  'DOKUMEN',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -185,7 +200,7 @@ class _DetailDocumentState extends State<DetailDocument> {
               Center(
                 child: GestureDetector(
                   onTap: () => documentController
-                      .showFullScreenImage(documentController.fotoSurat.value),
+                      .showFullScreenImage(documentController.imgDoc.value),
                   child: Container(
                     width: 317,
                     height: 200,
@@ -193,13 +208,12 @@ class _DetailDocumentState extends State<DetailDocument> {
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: documentController.fotoSurat.value.isNotEmpty
+                    child: documentController.imgDoc.value.isNotEmpty
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              documentController.fotoSurat.value,
-                              fit: BoxFit
-                                  .cover, // Maintain aspect ratio, cover the container
+                              documentController.imgDoc.value,
+                              fit: BoxFit.cover,
                               width: double.infinity,
                               height: double.infinity,
                               errorBuilder: (context, error, stackTrace) =>
@@ -226,63 +240,6 @@ class _DetailDocumentState extends State<DetailDocument> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16), // Spacing before divider
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 16), // Spacing after divider
-              const SizedBox(height: 20), // Spacing before buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Add logic for "Di Terima" (e.g., update status, navigate)
-                      print('Di Terima pressed');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.casualbutton1,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      'Di Terima',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.pureWhite,
-                        fontFamily: 'Outfit',
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Add logic for "Di Tolak" (e.g., update status, navigate)
-                      print('Di Tolak pressed');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.redstatus, // Example red color for rejection
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      'Di Tolak',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.pureWhite,
-                        fontFamily: 'Outfit',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
             ],
           ),
         );
