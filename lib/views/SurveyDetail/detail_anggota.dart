@@ -132,13 +132,20 @@ class _SurveyDetailState extends State<SurveyDetail> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Text(
-                  'Selanjutnya',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.pureWhite,
-                    fontFamily: 'Outfit',
-                  ),
+                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Selanjutnya',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.pureWhite,
+                          fontFamily: 'Outfit'),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.arrow_forward_outlined,
+                        color: Colors.white),
+                  ],
                 ),
               ),
             ),
