@@ -18,6 +18,17 @@ class InqurySurveyController extends GetxController {
   var collateralProofs = <CollateralProofModel>[].obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
+
+   String formatRupiah(String numberString) {
+    if (numberString.isEmpty || numberString == '0' || numberString == '0.00') {
+      return '0';
+    }
+    final number =
+        double.tryParse(numberString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+    if (number == 0) return '0';
+    return number.toInt().toString().replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+  }
   
 
   void getSurveyList({required String trxSurvey}) async {

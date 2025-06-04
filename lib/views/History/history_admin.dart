@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
-import 'package:loan_application_admin/routes/my_app_route.dart';
+import 'package:loan_application_admin/utils/routes/my_app_route.dart';
 import 'package:loan_application_admin/views/home/home_controller.dart';
 import 'package:loan_application_admin/widgets/History/filter_button.dart';
 import 'package:loan_application_admin/widgets/History/searchbar.dart';

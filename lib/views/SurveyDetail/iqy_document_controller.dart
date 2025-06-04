@@ -14,6 +14,8 @@ class IqyDocumentController extends GetxController {
   var adddescript = ''.obs;
   var documentModel = Rxn<Document>();
 
+  
+
   void fetchDocuments({required String trxSurvey}) async {
     isLoading.value = true;
     errorMessage.value = '';

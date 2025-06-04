@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loan_application_admin/core/theme/color.dart';
+import 'package:loan_application_admin/utils/routes/my_app_route.dart';
+import 'package:loan_application_admin/views/SurveyDetail/approval_controller.dart';
 import 'package:loan_application_admin/views/SurveyDetail/iqy_document_controller.dart';
 import 'package:loan_application_admin/widgets/custom_appbar.dart';
 
@@ -13,20 +16,41 @@ class DetailDocument extends StatefulWidget {
 class _DetailDocumentState extends State<DetailDocument> {
   final IqyDocumentController documentController =
       Get.put(IqyDocumentController());
+  final ApprovalController approvalController = Get.put(ApprovalController());
+  late String trxSurvey;
+  late String cifId;
 
   @override
   void initState() {
     super.initState();
-    final trxSurvey = Get.arguments;
-    if (trxSurvey != null && trxSurvey is String && trxSurvey.isNotEmpty) {
-      documentController.fetchDocuments(trxSurvey: trxSurvey);
-    } else {
-      documentController.errorMessage.value =
-          'trxSurvey tidak valid atau tidak ditemukan';
-      Get.snackbar('Error', documentController.errorMessage.value,
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    if (arguments != null) {
+      trxSurvey = arguments['trxSurvey']?.toString() ?? '';
+      cifId = arguments['cifId']?.toString() ?? '';
+
+      if (trxSurvey.isNotEmpty) {
+        documentController.fetchDocuments(trxSurvey: trxSurvey);
+        print("DetailDocument: trxSurvey=$trxSurvey, cifId=$cifId");
+      } else {
+        documentController.errorMessage.value =
+            'trxSurvey tidak valid atau tidak ditemukan';
+        Get.snackbar(
+          'Error',
+          documentController.errorMessage.value,
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
-          colorText: Colors.white);
+          colorText: Colors.white,
+        );
+      }
+    } else {
+      documentController.errorMessage.value = 'Argumen tidak ditemukan';
+      Get.snackbar(
+        'Error',
+        documentController.errorMessage.value,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -54,8 +78,7 @@ class _DetailDocumentState extends State<DetailDocument> {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    final trxSurvey = Get.arguments;
-                    if (trxSurvey != null && trxSurvey is String) {
+                    if (trxSurvey.isNotEmpty) {
                       documentController.fetchDocuments(trxSurvey: trxSurvey);
                     }
                   },
@@ -240,6 +263,108 @@ class _DetailDocumentState extends State<DetailDocument> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+              const Divider(thickness: 1, color: Colors.grey),
+              const SizedBox(height: 16),
+              Obx(() => approvalController.isLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              await approvalController.submitDocumentApproval(
+                                trxSurvey: trxSurvey,
+                                cifId: cifId,
+                                judgment: 'APPROVED',
+                              );
+                              Get.toNamed(
+                                MyAppRoutes.detailsurvey,
+                                arguments: {
+                                  'trxSurvey': trxSurvey,
+                                  'cifId': cifId,
+                                },
+                              );
+                            } catch (e) {
+                              // Tangani error, misalnya tampilkan snackbar
+                              Get.snackbar(
+                                  'Error', 'Gagal submit approval: $e');
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.casualbutton1,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 35, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            'Setujui',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.pureWhite,
+                              fontFamily: 'Outfit',
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            approvalController.submitDocumentApproval(
+                              trxSurvey: trxSurvey,
+                              cifId: cifId,
+                              judgment: 'DECLINED',
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.redstatus,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 35, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            'Tolak',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.pureWhite,
+                              fontFamily: 'Outfit',
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              const SizedBox(height: 30),
+              // Align(
+              //   alignment: Alignment.centerRight,
+              //   child: ElevatedButton(
+              //     onPressed: () => Get.toNamed(
+              //       MyAppRoutes.detailsurvey,
+              //       arguments: {
+              //         'trxSurvey': trxSurvey,
+              //         'cifId': cifId,
+              //       },
+              //     ), // Pass the trx_survey value
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: AppColors.casualbutton1,
+              //       padding: const EdgeInsets.symmetric(
+              //           horizontal: 24, vertical: 12),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(10),
+              //       ),
+              //     ),
+              //     child: Text(
+              //       'Selanjutnya',
+              //       style: TextStyle(
+              //         fontSize: 16,
+              //         color: AppColors.pureWhite,
+              //         fontFamily: 'Outfit',
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loan_application_admin/API/models/history_models.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
-import 'package:loan_application_admin/routes/my_app_route.dart';
+import 'package:loan_application_admin/utils/routes/my_app_route.dart';
 import 'package:loan_application_admin/views/SurveyDetail/iqy_anggota_controller.dart';
 import 'package:loan_application_admin/widgets/SurveyDetail/field_readonly.dart';
 import 'package:loan_application_admin/widgets/custom_appbar.dart';
@@ -122,8 +122,11 @@ class _SurveyDetailState extends State<SurveyDetail> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () => Get.toNamed(MyAppRoutes.detailsurvey,
-                    arguments: trxSurvey), // Pass the trx_survey value
+                onPressed: () => Get.toNamed(MyAppRoutes.detaildocumen,
+                    arguments: {
+                    'trxSurvey': trxSurvey,
+                    'cifId': cifId,
+                  },), // Pass the trx_survey value
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.casualbutton1,
                   padding:

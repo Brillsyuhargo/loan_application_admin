@@ -24,17 +24,17 @@ class FilterButtons extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 _buildButton(
-                  'Disetujui',
+                  'APPROVED',
                   backgroundColor: AppColors.greenstatus,
                 ),
                 const SizedBox(width: 8),
                 _buildButton(
-                  'Proces',
+                  'PROGRESS',
                   backgroundColor: AppColors.orangestatus,
                 ),
                 const SizedBox(width: 8),
                 _buildButton(
-                  'Ditolak',
+                  'DECLINED',
                   backgroundColor: AppColors.redstatus,
                 ),
                 const SizedBox(width: 8),

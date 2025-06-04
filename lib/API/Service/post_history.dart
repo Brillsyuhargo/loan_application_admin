@@ -1,21 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:loan_application_admin/API/dio/dio_client.dart';
+import 'package:loan_application_admin/utils/signature_utils.dart';
 
 class HistoryService {
+  static final signatureController = Get.find<SignatureController>();
   final dio = DioClient.dio;
+  final String path = "/sandbox.ics/v1.0/v1/survey/report";
   Future<Response> fetchHistoryDebitur({
     required String officeId,
     required DateTime fromDateTime,
     required DateTime toDateTime,
   }) async {
-    final timestamp =
-        DateTime.now().toUtc().toIso8601String().split('.').first + 'Z';
-
-    final headers = {
-      'ICS-Wipala': 'sastra.astana.dwipangga',
-      'ICS-Timestamp': timestamp,
-      'ICS-Signature': 'sandbox.rus2025',
-    };
+    final headers = signatureController.generateHeaders(
+      path: path,
+      verb: "POST",
+    );
     final body = {
       'Office_ID': officeId,
       'fromDateTime': fromDateTime.toIso8601String(),
@@ -23,7 +23,7 @@ class HistoryService {
     };
     try {
       final response = await dio.post(
-        '/sandbox.ics/v1.0/v1/survey/report',
+        path,
         data: body,
         options: Options(
           headers: headers,
