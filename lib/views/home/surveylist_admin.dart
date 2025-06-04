@@ -82,7 +82,6 @@ class _SurveyListState extends State<SurveyList> {
                             : 'https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png',
                         status: statusText,
                         statusColor: statusColor,
-                        trx_survey: item.application.trxSurvey,
                         plafond: item.application.plafond,
                         aged: '${item.aged} Years',
                       ),

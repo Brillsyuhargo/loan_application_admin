@@ -79,7 +79,6 @@ class _HistoryAdminState extends State<HistoryAdmin> {
                         aged: item.aged,
                         location: item.sectorCity,
                         plafond: item.application.plafond,
-                        trx_survey: item.application.trxSurvey,
                         date: DateFormat('yyyy-MM-dd')
                             .format(item.application.trxDate),
                         image: (item.document?.docPerson.isNotEmpty ?? false)

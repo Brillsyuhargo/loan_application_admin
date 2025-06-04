@@ -7,7 +7,6 @@ class SurveyBox extends StatelessWidget {
   final String plafond;
   final String date;
   final String location;
-  final String trx_survey;
   final String status;
   final String image;
   final Color statusColor;
@@ -18,16 +17,31 @@ class SurveyBox extends StatelessWidget {
     required this.aged,
     required this.plafond,
     required this.date,
-    required this.trx_survey,
     required this.location,
     required this.status,
     required this.image,
     required this.statusColor,
   });
 
+  // Function to format number as Rupiah
+  String formatRupiah(String numberString) {
+    if (numberString.isEmpty || numberString == '0' || numberString == '0.00') {
+      return 'Rp 0';
+    }
+    final number =
+        double.tryParse(numberString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+    if (number == 0) return 'Rp 0';
+    return 'Rp ${number.toInt().toString().replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]}.',
+        )}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final isNetworkImage = image.startsWith('http');
+    // Format plafond as Rupiah
+    final formattedPlafond = formatRupiah(plafond);
 
     return Container(
       height: 120, // tinggi ditambah agar tidak overflow
@@ -90,17 +104,14 @@ class SurveyBox extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  buildInfoRow(Icons.account_balance, formattedPlafond),
                   buildInfoRow(Icons.calendar_today, date),
                   buildInfoRow(Icons.person, aged),
-                  buildInfoRow(Icons.account_balance, plafond),
-                  buildInfoRow(Icons.assignment, trx_survey),
                   buildInfoRow(Icons.location_on, location),
                 ],
               ),
             ),
           ),
-
-          // Status box
           ClipRRect(
             borderRadius: const BorderRadius.only(
               topRight: Radius.circular(10),
