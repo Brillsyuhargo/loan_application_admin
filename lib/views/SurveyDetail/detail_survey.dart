@@ -121,13 +121,19 @@ class _DetailSurveyState extends State<DetailSurvey> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text(
-                            'Di Terima',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.pureWhite,
-                              fontFamily: 'Outfit',
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Di Setujui',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.pureWhite,
+                                    fontFamily: 'Outfit'),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.check, color: Colors.white),
+                            ],
                           ),
                         ),
                         ElevatedButton(
@@ -146,13 +152,20 @@ class _DetailSurveyState extends State<DetailSurvey> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text(
-                            'Di Tolak',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.pureWhite,
-                              fontFamily: 'Outfit',
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Di Tolak',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.pureWhite,
+                                    fontFamily: 'Outfit'),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.close_outlined,
+                                  color: Colors.white),
+                            ],
                           ),
                         ),
                       ],

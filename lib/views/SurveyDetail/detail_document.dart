@@ -300,13 +300,19 @@ class _DetailDocumentState extends State<DetailDocument> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text(
-                            'Setujui',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.pureWhite,
-                              fontFamily: 'Outfit',
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Di Setujui',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.pureWhite,
+                                    fontFamily: 'Outfit'),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.check, color: Colors.white),
+                            ],
                           ),
                         ),
                         ElevatedButton(
@@ -325,13 +331,20 @@ class _DetailDocumentState extends State<DetailDocument> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text(
-                            'Tolak',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.pureWhite,
-                              fontFamily: 'Outfit',
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Di Tolak',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.pureWhite,
+                                    fontFamily: 'Outfit'),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.close_outlined,
+                                  color: Colors.white),
+                            ],
                           ),
                         ),
                       ],
