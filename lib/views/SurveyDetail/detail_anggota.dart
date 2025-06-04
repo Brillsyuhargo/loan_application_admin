@@ -32,7 +32,8 @@ class _SurveyDetailState extends State<SurveyDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: 'Debitur Detail',
@@ -72,10 +73,17 @@ class _SurveyDetailState extends State<SurveyDetail> {
                     ),
                     //sudah
                     FieldReadonly(
-                      label: 'Alamat Lengkap',
+                      label: 'Alamat',
                       width: double.infinity,
-                      height: 50,
+                      height: 58,
                       value: iqyAnggotaController.sector_city.value,
+                      keyboardType: TextInputType.text,
+                    ),
+                    FieldReadonly(
+                      label: 'Detail Alamat',
+                      width: double.infinity,
+                      height: 58,
+                      value: iqyAnggotaController.address_line1.value,
                       keyboardType: TextInputType.text,
                     ),
                     //sudah
@@ -83,7 +91,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                       label: 'Kota Lahir',
                       width: double.infinity,
                       height: 50,
-                      value: iqyAnggotaController.address_line1.value,
+                      value: iqyAnggotaController.city_born.value,
                       keyboardType: TextInputType.text,
                     ),
                     //belum
@@ -107,6 +115,13 @@ class _SurveyDetailState extends State<SurveyDetail> {
                       width: double.infinity,
                       height: 50,
                       value: iqyAnggotaController.pasangan_nama.value,
+                      keyboardType: TextInputType.text,
+                    ),
+                    FieldReadonly(
+                      label: 'NIK pasangan',
+                      width: double.infinity,
+                      height: 50,
+                      value: iqyAnggotaController.pasangan_idcard.value,
                       keyboardType: TextInputType.text,
                     ),
                     FieldReadonly(
@@ -152,10 +167,10 @@ class _SurveyDetailState extends State<SurveyDetail> {
                 ),
               ),
             ),
-            const SizedBox(height: 30),
           ],
         ),
       ),
+      )
     );
   }
 }
