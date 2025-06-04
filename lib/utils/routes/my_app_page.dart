@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:loan_application_admin/Login/loginScreen.dart';
-import 'package:loan_application_admin/navbar/admin/dashboard_page_admin.dart';
-import 'package:loan_application_admin/routes/my_app_route.dart';
+import 'package:loan_application_admin/utils/navigation/navbar/admin/dashboard_page_admin.dart';
+import 'package:loan_application_admin/utils/routes/my_app_route.dart';
 import 'package:loan_application_admin/splash_screen.dart';
 import 'package:loan_application_admin/views/SurveyDetail/detail_anggota.dart';
 import 'package:loan_application_admin/views/SurveyDetail/detail_document.dart';

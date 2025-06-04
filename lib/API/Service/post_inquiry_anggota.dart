@@ -1,26 +1,23 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:loan_application_admin/API/dio/dio_client.dart';
 import 'package:loan_application_admin/API/models/inquiry_anggota_models.dart';
+import 'package:loan_application_admin/utils/signature_utils.dart';
 
 
 class Post_anggota {
+  static final signatureController = Get.find<SignatureController>();
   final dio = DioClient.dio;
+  final String path = "/sandbox.ics/v1.0/inquiry-anggota";
   Future<InquiryAnggota> fetchInquryanggota({
     required String idLegal,
     required String officeId,
     required String idSearch,
   }) async {
-    final timestamp =
-        '${DateTime.now().toUtc().toIso8601String().split('.').first}Z';
-
-    final headers = {
-      'ICS-Wipala': 'sastra.astana.dwipangga',
-      'ICS-Timestamp': timestamp,
-      'ICS-Signature': 'sandbox.rus2025',
-      'Content-Type': 'application/json',
-    };
+    final headers = signatureController.generateHeaders(
+      path: path,
+      verb: "POST",
+    );
 
     final body = {
       "id_legal": idLegal,
@@ -30,7 +27,7 @@ class Post_anggota {
 
     try {
       final response = await dio.post(
-        '/sandbox.ics/v1.0/inquiry-anggota',
+        path,
         data: body,
         options: Options(headers: headers),
       );

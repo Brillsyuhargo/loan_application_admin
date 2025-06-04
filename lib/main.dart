@@ -4,8 +4,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:loan_application_admin/API/dio/dio_client.dart';
 import 'package:loan_application_admin/Bindings/bindings.dart';
-import 'package:loan_application_admin/routes/my_app_page.dart';
-import 'package:loan_application_admin/routes/my_app_route.dart';
+import 'package:loan_application_admin/utils/routes/my_app_page.dart';
+import 'package:loan_application_admin/utils/routes/my_app_route.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -42,7 +42,6 @@ class HomeController extends GetxController {
       final purpose = item.application.purpose.toLowerCase();
       final trx_survey = item.application.trxSurvey.toString().toLowerCase();
       final aged = item.aged.toString().toLowerCase();
-    
 
       return fullName.contains(queryLower) ||
           purpose.contains(queryLower) ||
@@ -66,11 +65,11 @@ class HomeController extends GetxController {
 
   Color getStatusColor(String status) {
     switch (status.toUpperCase()) {
-      case 'DISETUJUI':
-        return AppColors.greenstatus;
-      case 'DITOLAK':
+      case 'APPROVED':
+        return const Color.fromRGBO(102, 217, 150, 1);
+      case 'DECLINED':
         return AppColors.redstatus;
-      case 'PROCES':
+      case 'PROGRESS':
         return AppColors.orangestatus;
       default:
         return Colors.grey;
