@@ -265,6 +265,33 @@ class _DetailDocumentState extends State<DetailDocument> {
               ),
               const SizedBox(height: 16),
               const Divider(thickness: 1, color: Colors.grey),
+              Obx(() => Center(
+                    child: Row(
+                      children: [
+                        Text("Status Document: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        Text(
+                          documentController.judgment.value.isEmpty
+                              ? 'Tidak ada data'
+                              : documentController.judgment.value,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: documentController.judgment.value
+                                    .contains('APPROVED')
+                                ? Colors.green
+                                : documentController.judgment.value
+                                        .contains('DECLINED')
+                                    ? Colors.red
+                                    : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              Divider(thickness: 1, color: Colors.grey),
               const SizedBox(height: 16),
               Obx(() => approvalController.isLoading.value
                   ? const Center(child: CircularProgressIndicator())
@@ -272,25 +299,58 @@ class _DetailDocumentState extends State<DetailDocument> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              await approvalController.submitDocumentApproval(
-                                trxSurvey: trxSurvey,
-                                cifId: cifId,
-                                judgment: 'APPROVED',
-                              );
-                              Get.toNamed(
-                                MyAppRoutes.detailsurvey,
-                                arguments: {
-                                  'trxSurvey': trxSurvey,
-                                  'cifId': cifId,
-                                },
-                              );
-                            } catch (e) {
-                              // Tangani error, misalnya tampilkan snackbar
-                              Get.snackbar(
-                                  'Error', 'Gagal submit approval: $e');
-                            }
+                          onPressed: () {
+                            // Show confirmation dialog for Approve
+                            Get.dialog(
+                              AlertDialog(
+                                title: const Text('Konfirmasi Persetujuan'),
+                                content: const Text(
+                                    'Apakah Anda yakin ingin menyetujui dokumen ini?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back(); // Close the dialog
+                                    },
+                                    child: const Text('Tidak'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Get.back(); // Close the dialog
+                                      try {
+                                        await approvalController
+                                            .submitDocumentApproval(
+                                          trxSurvey: trxSurvey,
+                                          cifId: cifId,
+                                          judgment: 'APPROVED',
+                                        );
+                                        // Refresh IqyDocumentController
+                                        documentController.fetchDocuments(
+                                            trxSurvey: trxSurvey);
+                                        Get.snackbar(
+                                          'Sukses',
+                                          'Dokumen telah disetujui',
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          backgroundColor: Colors.green,
+                                          colorText: Colors.white,
+                                        );
+                                        // Optional: Navigate to detail survey if needed
+                                        Get.toNamed(
+                                          MyAppRoutes.detailsurvey,
+                                          arguments: {
+                                            'trxSurvey': trxSurvey,
+                                            'cifId': cifId,
+                                          },
+                                        );
+                                      } catch (e) {
+                                        Get.snackbar('Error',
+                                            'Gagal submit approval: $e');
+                                      }
+                                    },
+                                    child: const Text('Ya'),
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.casualbutton1,
@@ -317,10 +377,48 @@ class _DetailDocumentState extends State<DetailDocument> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            approvalController.submitDocumentApproval(
-                              trxSurvey: trxSurvey,
-                              cifId: cifId,
-                              judgment: 'DECLINED',
+                            // Show confirmation dialog for Decline
+                            Get.dialog(
+                              AlertDialog(
+                                title: const Text('Konfirmasi Penolakan'),
+                                content: const Text(
+                                    'Apakah Anda yakin ingin menolak dokumen ini?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back(); // Close the dialog
+                                    },
+                                    child: const Text('Tidak'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Get.back(); // Close the dialog
+                                      try {
+                                        await approvalController
+                                            .submitDocumentApproval(
+                                          trxSurvey: trxSurvey,
+                                          cifId: cifId,
+                                          judgment: 'DECLINED',
+                                        );
+                                        // Refresh IqyDocumentController
+                                        documentController.fetchDocuments(
+                                            trxSurvey: trxSurvey);
+                                        Get.snackbar(
+                                          'Sukses',
+                                          'Dokumen telah ditolak',
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          backgroundColor: Colors.red,
+                                          colorText: Colors.white,
+                                        );
+                                      } catch (e) {
+                                        Get.snackbar('Error',
+                                            'Gagal submit penolakan: $e');
+                                      }
+                                    },
+                                    child: const Text('Ya'),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -350,34 +448,6 @@ class _DetailDocumentState extends State<DetailDocument> {
                       ],
                     )),
               const SizedBox(height: 30),
-              // Align(
-              //   alignment: Alignment.centerRight,
-              //   child: ElevatedButton(
-              //     onPressed: () => Get.toNamed(
-              //       MyAppRoutes.detailsurvey,
-              //       arguments: {
-              //         'trxSurvey': trxSurvey,
-              //         'cifId': cifId,
-              //       },
-              //     ), // Pass the trx_survey value
-              //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: AppColors.casualbutton1,
-              //       padding: const EdgeInsets.symmetric(
-              //           horizontal: 24, vertical: 12),
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(10),
-              //       ),
-              //     ),
-              //     child: Text(
-              //       'Selanjutnya',
-              //       style: TextStyle(
-              //         fontSize: 16,
-              //         color: AppColors.pureWhite,
-              //         fontFamily: 'Outfit',
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         );

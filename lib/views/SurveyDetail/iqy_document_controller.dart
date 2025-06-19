@@ -4,8 +4,8 @@ import 'package:loan_application_admin/API/Service/post_inqury_survey.dart';
 import 'package:loan_application_admin/API/models/inqury_survey_models.dart';
 
 class IqyDocumentController extends GetxController {
-  var ktpImage = ''.obs; // For KTP (docPerson)
-  var imgDoc = ''.obs; // For Foto Tanah (docAsset)
+  var ktpImage = ''.obs;
+  var imgDoc = ''.obs;
   var imgAgun = ''.obs;
   var agunan = ''.obs;
   var asset = ''.obs;
@@ -13,8 +13,8 @@ class IqyDocumentController extends GetxController {
   var errorMessage = ''.obs;
   var adddescript = ''.obs;
   var documentModel = Rxn<Document>();
-
-  
+  var collaborationItems = <CollaborationItem>[].obs;
+  var judgment = ''.obs; // Variabel untuk menyimpan judgment
 
   void fetchDocuments({required String trxSurvey}) async {
     isLoading.value = true;
@@ -27,10 +27,8 @@ class IqyDocumentController extends GetxController {
         trxSurvey: trxSurvey,
       );
 
-      // Extract the Document model from the response
       documentModel.value = inquryResponse.document;
 
-      // Populate image fields (assuming one image per category for simplicity)
       ktpImage.value = documentModel.value?.docPerson.isNotEmpty ?? false
           ? documentModel.value!.docPerson[0].img
           : '';
@@ -41,13 +39,29 @@ class IqyDocumentController extends GetxController {
           ? documentModel.value!.docImg[0].img
           : '';
 
-      // Placeholder values for agunan and bpkb (can be updated based on your API response)
       agunan.value = documentModel.value?.docAsset.isNotEmpty ?? false
           ? documentModel.value!.docAsset[0].doc
           : 'Tidak tersedia';
       asset.value = documentModel.value?.docImg.isNotEmpty ?? false
           ? documentModel.value!.docImg[0].doc
           : 'Tidak tersedia';
+
+      collaborationItems.assignAll(inquryResponse.collaboration.items);
+      // Filter item dengan Content: "DOC"
+      final selectedItem = collaborationItems.firstWhere(
+        (item) => item.content == 'DOC',
+        orElse: () => CollaborationItem(
+          approvalNo: '',
+          category: '',
+          content: '',
+          judgment: 'UNKNOWN',
+          date: '',
+        ),
+      );
+      judgment.value =
+          selectedItem.judgment; // Simpan judgment (misalnya, "DECLINED-05323")
+
+      print('Selected Judgment: ${judgment.value}');
     } catch (e) {
       errorMessage.value = 'Gagal mengambil data dokumen: $e';
       Get.snackbar('Error', errorMessage.value);
@@ -56,35 +70,38 @@ class IqyDocumentController extends GetxController {
     }
   }
 
-  // Moved function to show full-screen image
   void showFullScreenImage(String imageUrl) {
-    if (imageUrl.isEmpty) return; // Do nothing if there's no image
+    if (imageUrl.isEmpty) return;
     Get.dialog(
-      Dialog(
-        backgroundColor: Colors.black,
-        insetPadding: EdgeInsets.zero,
-        child: Stack(
+      Scaffold(
+        backgroundColor: Colors.black.withOpacity(0.8),
+        body: Stack(
           children: [
-            Center(
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit
-                    .contain, // Ensure the image fits within the screen while maintaining aspect ratio
-                errorBuilder: (context, error, stackTrace) => const Center(
-                  child: Text(
-                    'Gagal memuat gambar',
-                    style: TextStyle(color: Colors.white),
+            InteractiveViewer(
+              boundaryMargin: const EdgeInsets.all(0),
+              minScale: 0.5,
+              maxScale: 4.0,
+              child: Center(
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  width: double.infinity,
+                  height: double.infinity,
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Text(
+                      'Gagal memuat gambar',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
             ),
             Positioned(
               top: 40,
-              right: 20,
+              right: 25,
               child: IconButton(
                 icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                onPressed: () =>
-                    Get.back(), // Use Get.back() instead of Navigator
+                onPressed: () => Get.back(),
               ),
             ),
           ],

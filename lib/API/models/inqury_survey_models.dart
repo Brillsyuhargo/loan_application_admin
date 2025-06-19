@@ -1,6 +1,64 @@
 import 'package:get/get.dart';
 import 'package:loan_application_admin/API/Service/post_inqury_survey.dart';
 
+// Kelas baru untuk CollaborationItem
+class CollaborationItem {
+  final String approvalNo;
+  final String category;
+  final String content;
+  final String judgment;
+  final String date;
+
+  CollaborationItem({
+    required this.approvalNo,
+    required this.category,
+    required this.content,
+    required this.judgment,
+    required this.date,
+  });
+
+  factory CollaborationItem.fromJson(Map<String, dynamic> json) {
+    return CollaborationItem(
+      approvalNo: json['Approval_No']?.toString() ?? '',
+      category: json['Category']?.toString() ?? '',
+      content: json['Content']?.toString() ?? '',
+      judgment: json['Judgment']?.toString() ?? '',
+      date: json['Date']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Approval_No': approvalNo,
+      'Category': category,
+      'Content': content,
+      'Judgment': judgment,
+      'Date': date,
+    };
+  }
+}
+
+// Kelas baru untuk Collaboration
+class Collaboration {
+  final List<CollaborationItem> items;
+
+  Collaboration({
+    required this.items,
+  });
+
+  factory Collaboration.fromJson(List<dynamic> json) {
+    return Collaboration(
+      items: json.map((item) => CollaborationItem.fromJson(item)).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Collaboration': items.map((item) => item.toJson()).toList(),
+    };
+  }
+}
+
 class InqurySurveyController extends GetxController {
   var plafond = ''.obs;
   var purpose = ''.obs;
@@ -92,6 +150,7 @@ class InquirySurveyModel {
   final AdditionalInfo additionalInfo;
   final Document document;
   final Status status;
+  final Collaboration collaboration; // Tambahkan properti collaboration
 
   InquirySurveyModel({
     required this.responseCode,
@@ -118,6 +177,7 @@ class InquirySurveyModel {
     required this.additionalInfo,
     required this.document,
     required this.status,
+    required this.collaboration, // Tambahkan ke konstruktor
   });
 
   factory InquirySurveyModel.fromJson(Map<String, dynamic> json) {
@@ -146,6 +206,7 @@ class InquirySurveyModel {
       additionalInfo: AdditionalInfo.fromJson(json['additionalinfo'] ?? {}),
       document: Document.fromJson(json['document'] ?? {}),
       status: Status.fromJson(json['status'] ?? {}),
+      collaboration: Collaboration.fromJson(json['Collaboration'] ?? []), // Tambahkan parsing collaboration
     );
   }
 
@@ -175,9 +236,13 @@ class InquirySurveyModel {
       'additionalinfo': additionalInfo.toJson(),
       'document': document.toJson(),
       'status': status.toJson(),
+      'Collaboration': collaboration.toJson(), // Tambahkan serialisasi collaboration
     };
   }
 }
+
+// Kelas Application, Collateral, AdditionalInfo, Document, DocumentItem, dan Status tetap sama
+// ... (kode untuk kelas-kelas lainnya tetap seperti sebelumnya)
 
 class Application {
   final String trxSurvey;

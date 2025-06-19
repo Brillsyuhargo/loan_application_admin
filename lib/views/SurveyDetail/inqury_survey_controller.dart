@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loan_application_admin/API/Service/post_inqury_survey.dart';
 import 'package:loan_application_admin/API/models/inqury_survey_models.dart';
-
 
 class InqurySurveyController extends GetxController {
   var plafond = ''.obs;
@@ -18,8 +16,9 @@ class InqurySurveyController extends GetxController {
   var collateralProofs = <CollateralProofModel>[].obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
+  var plafondJudgment = ''.obs; // Tambahkan untuk Content: "PLAF"
 
-   String formatRupiah(String numberString) {
+  String formatRupiah(String numberString) {
     if (numberString.isEmpty || numberString == '0' || numberString == '0.00') {
       return '0';
     }
@@ -29,7 +28,6 @@ class InqurySurveyController extends GetxController {
     return number.toInt().toString().replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
   }
-  
 
   void getSurveyList({required String trxSurvey}) async {
     isLoading.value = true;
@@ -53,6 +51,21 @@ class InqurySurveyController extends GetxController {
       asset.value = inquryResponse.additionalInfo.asset;
       installment.value = inquryResponse.additionalInfo.installment;
 
+      // Filter item dengan Content: "PLAF"
+      final selectedItem = inquryResponse.collaboration.items.firstWhere(
+        (item) => item.content == 'PLAF',
+        orElse: () => CollaborationItem(
+          approvalNo: '',
+          category: '',
+          content: '',
+          judgment: 'UNKNOWN',
+          date: '',
+        ),
+      );
+      plafondJudgment.value = selectedItem
+          .judgment; // Simpan judgment untuk PLAF (misalnya, "APPROVED-05323")
+
+      print('PLAF Judgment: ${plafondJudgment.value}');
     } catch (e) {
       errorMessage.value = 'Gagal mengambil data: $e';
       Get.snackbar('Error', errorMessage.value);

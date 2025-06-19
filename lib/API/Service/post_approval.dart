@@ -1,13 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:loan_application_admin/API/dio/dio_client.dart';
 import 'package:loan_application_admin/API/models/approval_survey_model.dart';
 
 class ApprovalService {
   final dio = DioClient.dio;
 
-  // Generate custom headers
   Map<String, String> _generateHeaders() {
     final timestamp =
         '${DateTime.now().toUtc().toIso8601String().split('.').first}Z';
@@ -19,7 +16,6 @@ class ApprovalService {
     };
   }
 
-  // Submit approval (DOC or PLAF)
   Future<ApprovalSurveyModel> submitApproval({
     required String trxSurvey,
     required int cifId,
@@ -54,14 +50,6 @@ class ApprovalService {
 
       if (response.data is Map<String, dynamic>) {
         final res = response.data as Map<String, dynamic>;
-        final code = res['responseCode']?.toString();
-        final msg = res['responseMessage']?.toString();
-
-        if (response.statusCode == 200 && code == '00') {
-          Get.snackbar('Berhasil', 'Approve sukses',
-              backgroundColor: Colors.green, colorText: Colors.white);
-        }
-
         return ApprovalSurveyModel.fromJson(res);
       } else {
         throw Exception(
@@ -70,31 +58,46 @@ class ApprovalService {
       }
     } on DioException catch (e) {
       final data = e.response?.data;
-      String responseCode = '';
-      String responseMessage = '';
+      final statusCode = e.response?.statusCode;
 
+      // Tangani 401 Unauthorized
+      if (statusCode == 401) {
+        if (data is Map<String, dynamic>) {
+          final responseCode = data['responseCode']?.toString() ?? 'UNKNOWN';
+          if (responseCode == '02') {
+            return ApprovalSurveyModel(
+              responseCode: '02',
+              responseMessage: 'Mandatory document attachments are required',
+            );
+          } else if (responseCode == '06') {
+            return ApprovalSurveyModel(
+              responseCode: '06',
+              responseMessage: 'Document Harus Disetujui Terlebih Dahulu',
+            );
+          } else {
+            return ApprovalSurveyModel(
+              responseCode: '05',
+              responseMessage:
+                  'Anda tidak memiliki akses untuk melakukan approval',
+            );
+          }
+        } else {
+          return ApprovalSurveyModel(
+            responseCode: '05',
+            responseMessage:
+                'Anda tidak memiliki akses untuk melakukan approval',
+          );
+        }
+      }
+
+      // Tangani respons error lainnya
       if (data is Map<String, dynamic>) {
-        responseCode = data['responseCode']?.toString() ?? '';
-        responseMessage = data['responseMessage']?.toString() ?? '';
-      } else if (data is String) {
-        // Optional regex fallback for string-based error
-        final codeMatch = RegExp(r'responseCode: (\d{2})').firstMatch(data);
-        final msgMatch = RegExp(r'responseMessage: ([^,}]+)').firstMatch(data);
-        responseCode = codeMatch?.group(1) ?? '';
-        responseMessage = msgMatch?.group(1) ?? '';
-      }
-
-      if (responseCode == '05') {
-        Get.snackbar('Gagal', 'Anda diluar wewenang',
-            backgroundColor: Colors.red, colorText: Colors.white);
+        return ApprovalSurveyModel.fromJson(data);
       } else {
-        Get.snackbar('Error',
-            responseMessage.isNotEmpty ? responseMessage : 'Terjadi kesalahan',
-            backgroundColor: Colors.orange, colorText: Colors.white);
+        throw Exception(
+          'Failed to submit approval: ${data ?? e.message} ($statusCode)',
+        );
       }
-
-      throw Exception(
-          'Failed to submit approval bro : ${data ?? e.message} (${e.response?.statusCode})');
     }
   }
 }

@@ -6,7 +6,6 @@ import 'package:loan_application_admin/views/SurveyDetail/inqury_survey_controll
 import 'package:loan_application_admin/views/SurveyDetail/approval_controller.dart';
 import 'package:loan_application_admin/views/home/home_controller.dart';
 import 'package:loan_application_admin/widgets/SurveyDetail/detail_NominalPinjaman.dart';
-import 'package:loan_application_admin/widgets/SurveyDetail/detail_nilaiPinjaman.dart';
 import 'package:loan_application_admin/widgets/SurveyDetail/field_readonly.dart';
 import 'package:loan_application_admin/widgets/custom_appbar.dart';
 
@@ -85,6 +84,36 @@ class _DetailSurveyState extends State<DetailSurvey> {
                     ],
                   )),
               const SizedBox(height: 16),
+              Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+              Obx(() => Center(
+                    child: Row(
+                      children: [
+                        Text("Status Plafond: ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        Text(
+                          inquryController.plafondJudgment.value.isEmpty
+                              ? 'Tidak ada data'
+                              : inquryController.plafondJudgment.value,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: inquryController.plafondJudgment.value
+                                    .contains('APPROVED')
+                                ? Colors.green
+                                : inquryController.plafondJudgment.value
+                                        .contains('DECLINED')
+                                    ? Colors.red
+                                    : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
               const Divider(
                 thickness: 1,
                 color: Colors.grey,
@@ -96,22 +125,55 @@ class _DetailSurveyState extends State<DetailSurvey> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              await approvalController.submitPlafonApproval(
-                                trxSurvey: trxSurvey,
-                                cifId: cifId,
-                                judgment: 'APPROVED',
-                              );
-                              Get.offAllNamed(MyAppRoutes
-                                  .dashboard); // Navigasi ke dashboard, hapus stack sebelumnya
-                              final HomeController controller = Get.find<
-                                  HomeController>(); // Gunakan controller yang sudah ada
-                              controller.getHistory(); // Refresh survey list
-                            } catch (e) {
-                              Get.snackbar(
-                                  'Error', 'Gagal submit approval: $e');
-                            }
+                          onPressed: () {
+                            // Show confirmation dialog for Approve
+                            Get.dialog(
+                              AlertDialog(
+                                title: const Text('Konfirmasi Persetujuan'),
+                                content: const Text(
+                                    'Apakah Anda yakin ingin menyetujui plafon ini?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back(); // Close the dialog
+                                    },
+                                    child: const Text('Tidak'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Get.back(); // Close the dialog
+                                      try {
+                                        await approvalController
+                                            .submitPlafonApproval(
+                                          trxSurvey: trxSurvey,
+                                          cifId: cifId,
+                                          judgment: 'APPROVED',
+                                        );
+                                        // Optional: Refresh InqurySurveyController before navigation
+                                        inquryController.getSurveyList(
+                                            trxSurvey: trxSurvey);
+                                        Get.snackbar(
+                                          'Sukses',
+                                          'Plafon telah disetujui',
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          backgroundColor: Colors.green,
+                                          colorText: Colors.white,
+                                        );
+                                        // Navigate to dashboard and refresh HomeController
+                                        Get.offAllNamed(MyAppRoutes.dashboard);
+                                        final HomeController controller =
+                                            Get.find<HomeController>();
+                                        controller.getHistory();
+                                      } catch (e) {
+                                        Get.snackbar('Error',
+                                            'Gagal submit approval: $e');
+                                      }
+                                    },
+                                    child: const Text('Ya'),
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.casualbutton1,
@@ -138,10 +200,48 @@ class _DetailSurveyState extends State<DetailSurvey> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            approvalController.submitPlafonApproval(
-                              trxSurvey: trxSurvey,
-                              cifId: cifId,
-                              judgment: 'DECLINED',
+                            // Show confirmation dialog for Decline
+                            Get.dialog(
+                              AlertDialog(
+                                title: const Text('Konfirmasi Penolakan'),
+                                content: const Text(
+                                    'Apakah Anda yakin ingin menolak plafon ini?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back(); // Close the dialog
+                                    },
+                                    child: const Text('Tidak'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Get.back(); // Close the dialog
+                                      try {
+                                        await approvalController
+                                            .submitPlafonApproval(
+                                          trxSurvey: trxSurvey,
+                                          cifId: cifId,
+                                          judgment: 'DECLINED',
+                                        );
+                                        // Refresh InqurySurveyController
+                                        inquryController.getSurveyList(
+                                            trxSurvey: trxSurvey);
+                                        Get.snackbar(
+                                          'Sukses',
+                                          'Plafon telah ditolak',
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          backgroundColor: Colors.red,
+                                          colorText: Colors.white,
+                                        );
+                                      } catch (e) {
+                                        Get.snackbar('Error',
+                                            'Gagal submit penolakan: $e');
+                                      }
+                                    },
+                                    child: const Text('Ya'),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(

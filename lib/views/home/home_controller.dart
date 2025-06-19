@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
-import 'package:intl/intl.dart';
 import 'package:loan_application_admin/API/models/history_models.dart';
 import 'package:loan_application_admin/API/service/post_history.dart';
 import 'package:loan_application_admin/core/theme/color.dart';

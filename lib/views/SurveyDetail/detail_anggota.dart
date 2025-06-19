@@ -33,7 +33,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+        child: Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: 'Debitur Detail',
@@ -131,17 +131,26 @@ class _SurveyDetailState extends State<SurveyDetail> {
                       value: iqyAnggotaController.gender.value,
                       keyboardType: TextInputType.text,
                     ),
+                    FieldReadonly(
+                      label: 'Status Verifikasi Document',
+                      width: double.infinity,
+                      height: 50,
+                      value: iqyAnggotaController.gender.value,
+                      keyboardType: TextInputType.text,
+                    ),
                   ],
                 )),
             const SizedBox(height: 30),
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () => Get.toNamed(MyAppRoutes.detaildocumen,
-                    arguments: {
+                onPressed: () => Get.toNamed(
+                  MyAppRoutes.detaildocumen,
+                  arguments: {
                     'trxSurvey': trxSurvey,
                     'cifId': cifId,
-                  },), // Pass the trx_survey value
+                  },
+                ), // Pass the trx_survey value
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.casualbutton1,
                   padding:
@@ -150,7 +159,7 @@ class _SurveyDetailState extends State<SurveyDetail> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                 child: Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
@@ -170,7 +179,6 @@ class _SurveyDetailState extends State<SurveyDetail> {
           ],
         ),
       ),
-      )
-    );
+    ));
   }
 }

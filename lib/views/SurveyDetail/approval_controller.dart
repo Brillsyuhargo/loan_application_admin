@@ -59,9 +59,8 @@ class ApprovalController extends GetxController {
         judgment: judgment,
         token: '396108',
       );
-
       showApprovalSnackbar(
-        responseCode: result.responseCode ?? '',
+        responseCode: result.responseCode,
         responseMessage: result.responseMessage,
         status: result.additionalInfo?.status,
       );
