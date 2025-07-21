@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
-import 'package:loan_application_admin/widgets/History/showfilterbuttom.dart';
 
 class FilterButtons extends StatelessWidget {
   final Function(String) onFilterSelected;
@@ -41,21 +40,6 @@ class FilterButtons extends StatelessWidget {
               ],
             ),
           ),
-        ),
-
-        // Tombol filter icon
-        const SizedBox(width: 8),
-        ElevatedButton(
-          onPressed: () => showFilterBottomSheet(context, onFilterSelected),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.pureWhite,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: Icon(Icons.filter_list_alt,
-              size: 25, color: AppColors.blackLight),
         ),
       ],
     );
