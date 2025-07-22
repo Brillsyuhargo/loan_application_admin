@@ -8,7 +8,7 @@ void showApprovalSnackbar({
   String? status,
 }) {
   if (responseCode == '00') {
-    Get.snackbar('Success', 'Approval completed successfully woii mase',
+    Get.snackbar('Success', 'Completed successfully',
         backgroundColor: AppColors.greenstatus, colorText: AppColors.pureWhite);
   } else if (responseCode == '01' && status == 'SERVICELEVEL') {
     Get.snackbar('Warning', 'Ask for Superior Approval');
@@ -18,8 +18,9 @@ void showApprovalSnackbar({
     Get.snackbar('Gagal', 'Mohon maaf Anda diluar wewenang',
         backgroundColor: AppColors.redstatus, colorText: AppColors.pureWhite);
   } else if (responseCode == '06') {
-    Get.snackbar('Gagal', responseMessage ?? 'Anda harus menyetujui document terlebih dahulu',
+    Get.snackbar('Gagal',
+        responseMessage ?? 'Anda harus menyetujui document terlebih dahulu',
         backgroundColor: AppColors.redstatus, colorText: AppColors.pureWhite);
   } else
-    Get.snackbar('Info Masuue ', responseMessage ?? 'Unknown response');
+    Get.snackbar('Berhasil', responseMessage ?? 'Unknown response');
 }
