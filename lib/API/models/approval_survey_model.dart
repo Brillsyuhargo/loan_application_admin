@@ -116,7 +116,7 @@ class Application {
 
   Application({
     required this.applicationNo,
-    required this.trxSurvey,
+    required this.trxSurvey,wha
   });
 
   factory Application.fromJson(Map<String, dynamic> json) {

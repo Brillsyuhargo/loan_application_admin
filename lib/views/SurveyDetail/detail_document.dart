@@ -293,160 +293,188 @@ class _DetailDocumentState extends State<DetailDocument> {
                   )),
               Divider(thickness: 1, color: Colors.grey),
               const SizedBox(height: 16),
-              Obx(() => approvalController.isLoading.value
-                  ? const Center(child: CircularProgressIndicator())
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            // Show confirmation dialog for Approve
-                            Get.dialog(
-                              AlertDialog(
-                                title: const Text('Konfirmasi Persetujuan'),
-                                content: const Text(
-                                    'Apakah Anda yakin ingin menyetujui dokumen ini?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Get.back(); // Close the dialog
-                                    },
-                                    child: const Text('Tidak'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      Get.back(); // Close the dialog
-                                      try {
-                                        await approvalController
-                                            .submitDocumentApproval(
-                                          trxSurvey: trxSurvey,
-                                          cifId: cifId,
-                                          judgment: 'APPROVED',
-                                        );
-                                        // Refresh IqyDocumentController
-                                        documentController.fetchDocuments(
-                                            trxSurvey: trxSurvey);
-                                        Get.snackbar(
-                                          'Sukses',
-                                          'Dokumen telah disetujui',
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          backgroundColor: Colors.green,
-                                          colorText: Colors.white,
-                                        );
-                                        // Optional: Navigate to detail survey if needed
-                                        Get.toNamed(
-                                          MyAppRoutes.detailsurvey,
-                                          arguments: {
-                                            'trxSurvey': trxSurvey,
-                                            'cifId': cifId,
-                                          },
-                                        );
-                                      } catch (e) {
-                                        Get.snackbar('Error',
-                                            'Gagal submit approval: $e');
-                                      }
-                                    },
-                                    child: const Text('Ya'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.casualbutton1,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 35, vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Di Setujui',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColors.pureWhite,
-                                    fontFamily: 'Outfit'),
-                              ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.check, color: Colors.white),
-                            ],
-                          ),
+             Obx(() => approvalController.isLoading.value
+    ? const Center(child: CircularProgressIndicator())
+    : Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Tombol "Di Setujui"
+          ElevatedButton(
+            onPressed: () {
+              final TextEditingController approveNoteController =
+                  TextEditingController();
+
+              Get.dialog(
+                AlertDialog(
+                  title: const Text('Konfirmasi Persetujuan'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('Apakah Anda yakin ingin menyetujui dokumen ini?'),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: approveNoteController,
+                        maxLines: 3,
+                        decoration: const InputDecoration(
+                          labelText: 'Catatan Persetujuan',
+                          border: OutlineInputBorder(),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Show confirmation dialog for Decline
-                            Get.dialog(
-                              AlertDialog(
-                                title: const Text('Konfirmasi Penolakan'),
-                                content: const Text(
-                                    'Apakah Anda yakin ingin menolak dokumen ini?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Get.back(); // Close the dialog
-                                    },
-                                    child: const Text('Tidak'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      Get.back(); // Close the dialog
-                                      try {
-                                        await approvalController
-                                            .submitDocumentApproval(
-                                          trxSurvey: trxSurvey,
-                                          cifId: cifId,
-                                          judgment: 'DECLINED',
-                                        );
-                                        // Refresh IqyDocumentController
-                                        documentController.fetchDocuments(
-                                            trxSurvey: trxSurvey);
-                                        Get.snackbar(
-                                          'Sukses',
-                                          'Dokumen telah ditolak',
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          backgroundColor: Colors.red,
-                                          colorText: Colors.white,
-                                        );
-                                      } catch (e) {
-                                        Get.snackbar('Error',
-                                            'Gagal submit penolakan: $e');
-                                      }
-                                    },
-                                    child: const Text('Ya'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.redstatus,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 35, vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Di Tolak',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColors.pureWhite,
-                                    fontFamily: 'Outfit'),
-                              ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.close_outlined,
-                                  color: Colors.white),
-                            ],
-                          ),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: const Text('Batal'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        final note = approveNoteController.text.trim();
+                        Get.back();
+                        try {
+                          await approvalController.submitDocumentApproval(
+                            trxSurvey: trxSurvey,
+                            cifId: cifId,
+                            judgment: 'APPROVED',
+                            note: note,
+                          );
+                          documentController.fetchDocuments(trxSurvey: trxSurvey);
+                          Get.snackbar(
+                            'Sukses',
+                            'Dokumen telah disetujui',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
+                          Get.toNamed(
+                            MyAppRoutes.detailsurvey,
+                            arguments: {
+                              'trxSurvey': trxSurvey,
+                              'cifId': cifId,
+                            },
+                          );
+                        } catch (e) {
+                          Get.snackbar('Error', 'Gagal submit approval: $e');
+                        }
+                      },
+                      child: const Text('Ya, Setujui'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.casualbutton1,
+              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Di Setujui',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColors.pureWhite,
+                    fontFamily: 'Outfit',
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.check, color: Colors.white),
+              ],
+            ),
+          ),
+
+          // Tombol "Di Tolak"
+          ElevatedButton(
+            onPressed: () {
+              final TextEditingController declineNoteController =
+                  TextEditingController();
+
+              Get.dialog(
+                AlertDialog(
+                  title: const Text('Konfirmasi Penolakan'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('Apakah Anda yakin ingin menolak dokumen ini?'),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: declineNoteController,
+                        maxLines: 3,
+                        decoration: const InputDecoration(
+                          labelText: 'Catatan Penolakan',
+                          border: OutlineInputBorder(),
                         ),
-                      ],
-                    )),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: const Text('Batal'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        final note = declineNoteController.text.trim();
+                        Get.back();
+                        try {
+                          await approvalController.submitDocumentApproval(
+                            trxSurvey: trxSurvey,
+                            cifId: cifId,
+                            judgment: 'DECLINED',
+                            note: note,
+                          );
+                          documentController.fetchDocuments(trxSurvey: trxSurvey);
+                          Get.snackbar(
+                            'Sukses',
+                            'Dokumen telah ditolak',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                        } catch (e) {
+                          Get.snackbar('Error', 'Gagal submit penolakan: $e');
+                        }
+                      },
+                      child: const Text('Ya, Tolak'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.redstatus,
+              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Di Tolak',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColors.pureWhite,
+                    fontFamily: 'Outfit',
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.close_outlined, color: Colors.white),
+              ],
+            ),
+          ),
+        ],
+      )),
+
               const SizedBox(height: 30),
             ],
           ),

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:loan_application_admin/API/service/post_approval.dart';
+import 'package:loan_application_admin/API/Service/post_approval.dart';
 import 'package:loan_application_admin/utils/approval_utils.dart';
 
 class ApprovalController extends GetxController {
@@ -10,6 +10,7 @@ class ApprovalController extends GetxController {
     required String trxSurvey,
     required String cifId,
     required String judgment,
+    required String note,
   }) async {
     try {
       isLoading.value = true;
@@ -25,6 +26,7 @@ class ApprovalController extends GetxController {
         content: 'PLAF',
         judgment: judgment,
         token: '396108',
+        note: note,
       );
 
       showApprovalSnackbar(
@@ -43,6 +45,7 @@ class ApprovalController extends GetxController {
     required String trxSurvey,
     required String cifId,
     required String judgment,
+    required String note,
   }) async {
     try {
       isLoading.value = true;
@@ -58,6 +61,7 @@ class ApprovalController extends GetxController {
         content: 'DOC',
         judgment: judgment,
         token: '396108',
+        note: note,
       );
       showApprovalSnackbar(
         responseCode: result.responseCode,

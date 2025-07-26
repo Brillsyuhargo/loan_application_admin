@@ -21,6 +21,7 @@ class ApprovalService {
     required int cifId,
     required String content,
     required String judgment,
+    required String note,
     String token = '396108',
     String officeId = '000',
     String category = 'SURVEY_DEBT',
@@ -33,6 +34,7 @@ class ApprovalService {
       'Office_ID': officeId,
       'cif_id': cifId,
       'trx_survey': trxSurvey,
+      'note': note,
       'approval': {
         'category': category,
         'content': content,

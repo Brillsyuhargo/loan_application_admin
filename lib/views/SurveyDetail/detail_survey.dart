@@ -124,32 +124,51 @@ class _DetailSurveyState extends State<DetailSurvey> {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        // Tombol Setujui
                         ElevatedButton(
                           onPressed: () {
-                            // Show confirmation dialog for Approve
+                            final TextEditingController approveNoteController =
+                                TextEditingController();
+
                             Get.dialog(
                               AlertDialog(
                                 title: const Text('Konfirmasi Persetujuan'),
-                                content: const Text(
-                                    'Apakah Anda yakin ingin menyetujui plafon ini?'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                        'Apakah Anda yakin ingin menyetujui plafon ini?'),
+                                    const SizedBox(height: 16),
+                                    TextField(
+                                      controller: approveNoteController,
+                                      maxLines: 3,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Catatan Persetujuan',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Get.back(); // Close the dialog
+                                      Get.back();
                                     },
-                                    child: const Text('Tidak'),
+                                    child: const Text('Batal'),
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      Get.back(); // Close the dialog
+                                      final note =
+                                          approveNoteController.text.trim();
+                                      Get.back();
                                       try {
                                         await approvalController
                                             .submitPlafonApproval(
                                           trxSurvey: trxSurvey,
                                           cifId: cifId,
                                           judgment: 'APPROVED',
+                                          note: note,
                                         );
-                                        // Optional: Refresh InqurySurveyController before navigation
                                         inquryController.getSurveyList(
                                             trxSurvey: trxSurvey);
                                         Get.snackbar(
@@ -159,7 +178,6 @@ class _DetailSurveyState extends State<DetailSurvey> {
                                           backgroundColor: Colors.green,
                                           colorText: Colors.white,
                                         );
-                                        // Navigate to dashboard and refresh HomeController
                                         Get.offAllNamed(MyAppRoutes.dashboard);
                                         final HomeController controller =
                                             Get.find<HomeController>();
@@ -169,7 +187,7 @@ class _DetailSurveyState extends State<DetailSurvey> {
                                             'Gagal submit approval: $e');
                                       }
                                     },
-                                    child: const Text('Ya'),
+                                    child: const Text('Ya, Setujui'),
                                   ),
                                 ],
                               ),
@@ -198,32 +216,52 @@ class _DetailSurveyState extends State<DetailSurvey> {
                             ],
                           ),
                         ),
+
+                        // Tombol Tolak
                         ElevatedButton(
                           onPressed: () {
-                            // Show confirmation dialog for Decline
+                            final TextEditingController declineNoteController =
+                                TextEditingController();
+
                             Get.dialog(
                               AlertDialog(
                                 title: const Text('Konfirmasi Penolakan'),
-                                content: const Text(
-                                    'Apakah Anda yakin ingin menolak plafon ini?'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                        'Apakah Anda yakin ingin menolak plafon ini?'),
+                                    const SizedBox(height: 16),
+                                    TextField(
+                                      controller: declineNoteController,
+                                      maxLines: 3,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Catatan Penolakan',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Get.back(); // Close the dialog
+                                      Get.back();
                                     },
-                                    child: const Text('Tidak'),
+                                    child: const Text('Batal'),
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      Get.back(); // Close the dialog
+                                      final note =
+                                          declineNoteController.text.trim();
+                                      Get.back();
                                       try {
                                         await approvalController
                                             .submitPlafonApproval(
                                           trxSurvey: trxSurvey,
                                           cifId: cifId,
                                           judgment: 'DECLINED',
+                                          note: note,
                                         );
-                                        // Refresh InqurySurveyController
                                         inquryController.getSurveyList(
                                             trxSurvey: trxSurvey);
                                         Get.snackbar(
@@ -238,7 +276,7 @@ class _DetailSurveyState extends State<DetailSurvey> {
                                             'Gagal submit penolakan: $e');
                                       }
                                     },
-                                    child: const Text('Ya'),
+                                    child: const Text('Ya, Tolak'),
                                   ),
                                 ],
                               ),
