@@ -9,6 +9,187 @@ import 'package:loan_application_admin/widgets/SurveyDetail/detail_NominalPinjam
 import 'package:loan_application_admin/widgets/SurveyDetail/field_readonly.dart';
 import 'package:loan_application_admin/widgets/custom_appbar.dart';
 
+// Custom Dialog Widget - langsung di file ini
+class CustomApprovalDialog extends StatelessWidget {
+  final String title;
+  final String message;
+  final String labelText;
+  final Color buttonColor;
+  final String buttonText;
+  final IconData buttonIcon;
+  final TextEditingController noteController;
+  final VoidCallback onCancel;
+  final VoidCallback onConfirm;
+
+  const CustomApprovalDialog({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.labelText,
+    required this.buttonColor,
+    required this.buttonText,
+    required this.buttonIcon,
+    required this.noteController,
+    required this.onCancel,
+    required this.onConfirm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.white.withOpacity(0.95),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Title with icon
+            Row(
+              children: [
+                Icon(
+                  buttonIcon,
+                  color: buttonColor,
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Message
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                message,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Note input field
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: TextField(
+                controller: noteController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: labelText,
+                  labelStyle: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.all(16),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Action buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Cancel button
+                Expanded(
+                  child: TextButton(
+                    onPressed: onCancel,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: const BorderSide(color: Colors.grey),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.close, color: Colors.black, size: 18),
+                        SizedBox(width: 6),
+                        Text(
+                          'Batal',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                // Confirm button
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: onConfirm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: buttonColor,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(buttonIcon, color: Colors.white, size: 18),
+                        const SizedBox(width: 6),
+                        Text(
+                          buttonText,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: 'Outfit',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class DetailSurvey extends StatefulWidget {
   const DetailSurvey({super.key});
 
@@ -130,66 +311,50 @@ class _DetailSurveyState extends State<DetailSurvey> {
                             final TextEditingController approveNoteController =
                                 TextEditingController();
 
-                            Get.dialog(
-                              AlertDialog(
-                                title: const Text('Konfirmasi Persetujuan'),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                        'Apakah Anda yakin ingin menyetujui plafon ini?'),
-                                    const SizedBox(height: 16),
-                                    TextField(
-                                      controller: approveNoteController,
-                                      maxLines: 3,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Catatan Persetujuan',
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    child: const Text('Batal'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      final note =
-                                          approveNoteController.text.trim();
-                                      Get.back();
-                                      try {
-                                        await approvalController
-                                            .submitPlafonApproval(
-                                          trxSurvey: trxSurvey,
-                                          cifId: cifId,
-                                          judgment: 'APPROVED',
-                                          note: note,
-                                        );
-                                        inquryController.getSurveyList(
-                                            trxSurvey: trxSurvey);
-                                        Get.snackbar(
-                                          'Sukses',
-                                          'Plafon telah disetujui',
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          backgroundColor: Colors.green,
-                                          colorText: Colors.white,
-                                        );
-                                        Get.offAllNamed(MyAppRoutes.dashboard);
-                                        final HomeController controller =
-                                            Get.find<HomeController>();
-                                        controller.getHistory();
-                                      } catch (e) {
-                                        Get.snackbar('Error',
-                                            'Gagal submit approval: $e');
-                                      }
-                                    },
-                                    child: const Text('Ya, Setujui'),
-                                  ),
-                                ],
+                            showDialog(
+                              context: context,
+                              builder: (context) => CustomApprovalDialog(
+                                title: 'Konfirmasi Persetujuan',
+                                message:
+                                    'Apakah Anda yakin ingin menyetujui plafon ini?',
+                                labelText: 'Catatan Persetujuan',
+                                buttonColor: AppColors.casualbutton1,
+                                buttonText: 'Ya, Setujui',
+                                buttonIcon: Icons.check,
+                                noteController: approveNoteController,
+                                onCancel: () {
+                                  Navigator.of(context).pop();
+                                },
+                                onConfirm: () async {
+                                  final note =
+                                      approveNoteController.text.trim();
+                                  Navigator.of(context).pop();
+                                  try {
+                                    await approvalController
+                                        .submitPlafonApproval(
+                                      trxSurvey: trxSurvey,
+                                      cifId: cifId,
+                                      judgment: 'APPROVED',
+                                      note: note,
+                                    );
+                                    inquryController.getSurveyList(
+                                        trxSurvey: trxSurvey);
+                                    Get.snackbar(
+                                      'Sukses',
+                                      'Plafon telah disetujui',
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.green,
+                                      colorText: Colors.white,
+                                    );
+                                    Get.offAllNamed(MyAppRoutes.dashboard);
+                                    final HomeController controller =
+                                        Get.find<HomeController>();
+                                    controller.getHistory();
+                                  } catch (e) {
+                                    Get.snackbar(
+                                        'Error', 'Gagal submit approval: $e');
+                                  }
+                                },
                               ),
                             );
                           },
@@ -223,62 +388,46 @@ class _DetailSurveyState extends State<DetailSurvey> {
                             final TextEditingController declineNoteController =
                                 TextEditingController();
 
-                            Get.dialog(
-                              AlertDialog(
-                                title: const Text('Konfirmasi Penolakan'),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                        'Apakah Anda yakin ingin menolak plafon ini?'),
-                                    const SizedBox(height: 16),
-                                    TextField(
-                                      controller: declineNoteController,
-                                      maxLines: 3,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Catatan Penolakan',
-                                        border: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                    child: const Text('Batal'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      final note =
-                                          declineNoteController.text.trim();
-                                      Get.back();
-                                      try {
-                                        await approvalController
-                                            .submitPlafonApproval(
-                                          trxSurvey: trxSurvey,
-                                          cifId: cifId,
-                                          judgment: 'DECLINED',
-                                          note: note,
-                                        );
-                                        inquryController.getSurveyList(
-                                            trxSurvey: trxSurvey);
-                                        Get.snackbar(
-                                          'Sukses',
-                                          'Plafon telah ditolak',
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          backgroundColor: Colors.red,
-                                          colorText: Colors.white,
-                                        );
-                                      } catch (e) {
-                                        Get.snackbar('Error',
-                                            'Gagal submit penolakan: $e');
-                                      }
-                                    },
-                                    child: const Text('Ya, Tolak'),
-                                  ),
-                                ],
+                            showDialog(
+                              context: context,
+                              builder: (context) => CustomApprovalDialog(
+                                title: 'Konfirmasi Penolakan',
+                                message:
+                                    'Apakah Anda yakin ingin menolak plafon ini?',
+                                labelText: 'Catatan Penolakan',
+                                buttonColor: AppColors.redstatus,
+                                buttonText: 'Ya, Tolak',
+                                buttonIcon: Icons.close_outlined,
+                                noteController: declineNoteController,
+                                onCancel: () {
+                                  Navigator.of(context).pop();
+                                },
+                                onConfirm: () async {
+                                  final note =
+                                      declineNoteController.text.trim();
+                                  Navigator.of(context).pop();
+                                  try {
+                                    await approvalController
+                                        .submitPlafonApproval(
+                                      trxSurvey: trxSurvey,
+                                      cifId: cifId,
+                                      judgment: 'DECLINED',
+                                      note: note,
+                                    );
+                                    inquryController.getSurveyList(
+                                        trxSurvey: trxSurvey);
+                                    Get.snackbar(
+                                      'Sukses',
+                                      'Plafon telah ditolak',
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
+                                    );
+                                  } catch (e) {
+                                    Get.snackbar(
+                                        'Error', 'Gagal submit penolakan: $e');
+                                  }
+                                },
                               ),
                             );
                           },
