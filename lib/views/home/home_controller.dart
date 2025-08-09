@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:loan_application_admin/API/models/history_models.dart';
 import 'package:loan_application_admin/API/service/post_history.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
@@ -41,11 +42,18 @@ class HomeController extends GetxController {
       final purpose = item.application.purpose.toLowerCase();
       final trx_survey = item.application.trxSurvey.toString().toLowerCase();
       final aged = item.aged.toString().toLowerCase();
+      final date = DateFormat('yyyy-MM-dd')
+          .format(item.application.trxDate)
+          .toLowerCase();
+       final sectorCity = item.sectorCity.toLowerCase();
+      
 
       return fullName.contains(queryLower) ||
           purpose.contains(queryLower) ||
           trx_survey.contains(queryLower) ||
-          aged.contains(queryLower);
+          aged.contains(queryLower) ||
+          date.contains(queryLower) ||
+          sectorCity.contains(queryLower);
     }).toList();
   }
 

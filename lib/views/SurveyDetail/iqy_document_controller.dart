@@ -14,7 +14,8 @@ class IqyDocumentController extends GetxController {
   var adddescript = ''.obs;
   var documentModel = Rxn<Document>();
   var collaborationItems = <CollaborationItem>[].obs;
-  var judgment = ''.obs; // Variabel untuk menyimpan judgment
+  var judgment = ''.obs;
+  var note = ''.obs; // Variabel untuk menyimpan judgment
 
   void fetchDocuments({required String trxSurvey}) async {
     isLoading.value = true;
@@ -56,10 +57,12 @@ class IqyDocumentController extends GetxController {
           content: '',
           judgment: 'UNKNOWN',
           date: '',
+          note: '',
         ),
       );
       judgment.value =
           selectedItem.judgment; // Simpan judgment (misalnya, "DECLINED-05323")
+      note.value = selectedItem.note; // Simpan judgment untuk digunakan di UI
 
       print('Selected Judgment: ${judgment.value}');
     } catch (e) {

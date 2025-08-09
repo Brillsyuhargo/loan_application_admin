@@ -1,191 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/utils/routes/my_app_route.dart';
 import 'package:loan_application_admin/views/SurveyDetail/approval_controller.dart';
+import 'package:loan_application_admin/views/SurveyDetail/detail_survey.dart';
 import 'package:loan_application_admin/views/SurveyDetail/iqy_document_controller.dart';
 import 'package:loan_application_admin/widgets/custom_appbar.dart';
-
-// Custom Dialog Widget - sama seperti sebelumnya
-class CustomApprovalDialog extends StatelessWidget {
-  final String title;
-  final String message;
-  final String labelText;
-  final Color buttonColor;
-  final String buttonText;
-  final IconData buttonIcon;
-  final TextEditingController noteController;
-  final VoidCallback onCancel;
-  final VoidCallback onConfirm;
-
-  const CustomApprovalDialog({
-    super.key,
-    required this.title,
-    required this.message,
-    required this.labelText,
-    required this.buttonColor,
-    required this.buttonText,
-    required this.buttonIcon,
-    required this.noteController,
-    required this.onCancel,
-    required this.onConfirm,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.white.withOpacity(0.95),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Title with icon
-            Row(
-              children: [
-                Icon(
-                  buttonIcon,
-                  color: buttonColor,
-                  size: 24,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // Message
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Note input field
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: TextField(
-                controller: noteController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  labelText: labelText,
-                  labelStyle: TextStyle(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.all(16),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Action buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Cancel button
-                Expanded(
-                  child: TextButton(
-                    onPressed: onCancel,
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.close, color: Colors.black, size: 18),
-                        SizedBox(width: 6),
-                        Text(
-                          'Batal',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-
-                // Confirm button
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: onConfirm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: buttonColor,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(buttonIcon, color: Colors.white, size: 18),
-                        const SizedBox(width: 6),
-                        Text(
-                          buttonText,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            fontFamily: 'Outfit',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class DetailDocument extends StatefulWidget {
   const DetailDocument({super.key});
@@ -447,7 +268,7 @@ class _DetailDocumentState extends State<DetailDocument> {
               const SizedBox(height: 16),
               const Divider(thickness: 1, color: Colors.grey),
               Obx(() => Center(
-                    child: Row(
+                    child: Column(
                       children: [
                         Text("Status Document: ",
                             style: TextStyle(
@@ -469,6 +290,16 @@ class _DetailDocumentState extends State<DetailDocument> {
                                     : Colors.grey,
                           ),
                         ),
+                        const SizedBox(width: 16),
+                        const SizedBox(height: 8),
+                        Obx(() => Text(
+                              'Catatan: ${documentController.note.value.isNotEmpty ? documentController.note.value : 'Tidak ada catatan'}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontStyle: FontStyle.italic,
+                                color: Colors.grey[700],
+                              ),
+                            )),
                       ],
                     ),
                   )),
@@ -502,35 +333,28 @@ class _DetailDocumentState extends State<DetailDocument> {
                                 onConfirm: () async {
                                   final note =
                                       approveNoteController.text.trim();
-                                  Navigator.of(context).pop();
-                                  try {
-                                    await approvalController
-                                        .submitDocumentApproval(
-                                      trxSurvey: trxSurvey,
-                                      cifId: cifId,
-                                      judgment: 'APPROVED',
-                                      note: note,
-                                    );
-                                    documentController.fetchDocuments(
-                                        trxSurvey: trxSurvey);
-                                    Get.snackbar(
-                                      'Sukses',
-                                      'Dokumen telah disetujui',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.green,
-                                      colorText: Colors.white,
-                                    );
-                                    Get.toNamed(
-                                      MyAppRoutes.detailsurvey,
-                                      arguments: {
-                                        'trxSurvey': trxSurvey,
-                                        'cifId': cifId,
-                                      },
-                                    );
-                                  } catch (e) {
-                                    Get.snackbar(
-                                        'Error', 'Gagal submit approval: $e');
+                                  if (note.isEmpty) {
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.warning,
+                                      animType: AnimType.scale,
+                                      title: 'Catatan Kosong',
+                                      desc:
+                                          'Mohon isi catatan terlebih dahulu.',
+                                      btnOkOnPress: () {},
+                                      btnOkColor: Colors.orange,
+                                    ).show();
+                                    return; // Stop agar tidak lanjut submit
                                   }
+
+                                  Get.back();
+                                  await approvalController
+                                      .submitDocumentApproval(
+                                    trxSurvey: trxSurvey,
+                                    cifId: cifId,
+                                    judgment: 'APPROVED',
+                                    note: note,
+                                  );
                                 },
                               ),
                             );
@@ -578,33 +402,34 @@ class _DetailDocumentState extends State<DetailDocument> {
                                 buttonIcon: Icons.close_outlined,
                                 noteController: declineNoteController,
                                 onCancel: () {
-                                  Navigator.of(context).pop();
+                                  Get.back();
                                 },
                                 onConfirm: () async {
                                   final note =
                                       declineNoteController.text.trim();
-                                  Navigator.of(context).pop();
-                                  try {
-                                    await approvalController
-                                        .submitDocumentApproval(
-                                      trxSurvey: trxSurvey,
-                                      cifId: cifId,
-                                      judgment: 'DECLINED',
-                                      note: note,
-                                    );
-                                    documentController.fetchDocuments(
-                                        trxSurvey: trxSurvey);
-                                    Get.snackbar(
-                                      'Sukses',
-                                      'Dokumen telah ditolak',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white,
-                                    );
-                                  } catch (e) {
-                                    Get.snackbar(
-                                        'Error', 'Gagal submit penolakan: $e');
+                                  if (note.isEmpty) {
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.warning,
+                                      animType: AnimType.scale,
+                                      title: 'Catatan Kosong',
+                                      desc:
+                                          'Mohon isi catatan terlebih dahulu.',
+                                      btnOkOnPress: () {},
+                                      btnOkColor: Colors.orange,
+                                    ).show();
+                                    return; // Stop agar tidak lanjut submit
                                   }
+
+                                  Get.back();
+
+                                  await approvalController
+                                      .submitDocumentApproval(
+                                    trxSurvey: trxSurvey,
+                                    cifId: cifId,
+                                    judgment: 'DECLINED',
+                                    note: note,
+                                  );
                                 },
                               ),
                             );

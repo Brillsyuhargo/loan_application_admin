@@ -8,12 +8,14 @@ class CollaborationItem {
   final String content;
   final String judgment;
   final String date;
+  final String note;
 
   CollaborationItem({
     required this.approvalNo,
     required this.category,
     required this.content,
     required this.judgment,
+    required this.note,
     required this.date,
   });
 
@@ -24,6 +26,7 @@ class CollaborationItem {
       content: json['Content']?.toString() ?? '',
       judgment: json['Judgment']?.toString() ?? '',
       date: json['Date']?.toString() ?? '',
+      note: json['Note']?.toString() ?? '',
     );
   }
 
@@ -34,6 +37,7 @@ class CollaborationItem {
       'Content': content,
       'Judgment': judgment,
       'Date': date,
+      'Note': note,
     };
   }
 }

@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
@@ -270,7 +271,7 @@ class _DetailSurveyState extends State<DetailSurvey> {
                 color: Colors.grey,
               ),
               Obx(() => Center(
-                    child: Row(
+                    child: Column(
                       children: [
                         Text("Status Plafond: ",
                             style: TextStyle(
@@ -292,6 +293,15 @@ class _DetailSurveyState extends State<DetailSurvey> {
                                     : Colors.grey,
                           ),
                         ),
+                         const SizedBox(height: 8),
+                        Obx(() => Text(
+                              'Catatan: ${inquryController.note.value.isNotEmpty ? inquryController.note.value : 'Tidak ada catatan'}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontStyle: FontStyle.italic,
+                                color: Colors.grey[700],
+                              ),
+                            )),
                       ],
                     ),
                   )),
@@ -308,28 +318,44 @@ class _DetailSurveyState extends State<DetailSurvey> {
                         // Tombol Setujui
                         ElevatedButton(
                           onPressed: () {
-                            final TextEditingController approveNoteController =
+                            final approveNoteController =
                                 TextEditingController();
+
+                            final validContext =
+                                context; // <-- Simpan context valid
 
                             showDialog(
                               context: context,
                               builder: (context) => CustomApprovalDialog(
-                                title: 'Konfirmasi Persetujuan',
-                                message:
-                                    'Apakah Anda yakin ingin menyetujui plafon ini?',
-                                labelText: 'Catatan Persetujuan',
-                                buttonColor: AppColors.casualbutton1,
-                                buttonText: 'Ya, Setujui',
-                                buttonIcon: Icons.check,
-                                noteController: approveNoteController,
-                                onCancel: () {
-                                  Navigator.of(context).pop();
-                                },
-                                onConfirm: () async {
-                                  final note =
-                                      approveNoteController.text.trim();
-                                  Navigator.of(context).pop();
-                                  try {
+                                  title: 'Konfirmasi Persetujuan',
+                                  message:
+                                      'Apakah Anda yakin ingin menyetujui plafon ini?',
+                                  labelText: 'Catatan Persetujuan',
+                                  buttonColor: AppColors.casualbutton1,
+                                  buttonText: 'Ya, Setujui',
+                                  buttonIcon: Icons.check,
+                                  noteController: approveNoteController,
+                                  onCancel: () {
+                                    Get.back();
+                                  },
+                                  onConfirm: () async {
+                                    final note =
+                                        approveNoteController.text.trim();
+                                    if (note.isEmpty) {
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.warning,
+                                        animType: AnimType.scale,
+                                        title: 'Catatan Kosong',
+                                        desc:
+                                            'Mohon isi catatan terlebih dahulu.',
+                                        btnOkOnPress: () {},
+                                        btnOkColor: Colors.orange,
+                                      ).show();
+                                      return; // Stop agar tidak lanjut submit
+                                    }
+
+                                    Get.back();
                                     await approvalController
                                         .submitPlafonApproval(
                                       trxSurvey: trxSurvey,
@@ -337,25 +363,7 @@ class _DetailSurveyState extends State<DetailSurvey> {
                                       judgment: 'APPROVED',
                                       note: note,
                                     );
-                                    inquryController.getSurveyList(
-                                        trxSurvey: trxSurvey);
-                                    Get.snackbar(
-                                      'Sukses',
-                                      'Plafon telah disetujui',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.green,
-                                      colorText: Colors.white,
-                                    );
-                                    Get.offAllNamed(MyAppRoutes.dashboard);
-                                    final HomeController controller =
-                                        Get.find<HomeController>();
-                                    controller.getHistory();
-                                  } catch (e) {
-                                    Get.snackbar(
-                                        'Error', 'Gagal submit approval: $e');
-                                  }
-                                },
-                              ),
+                                  }),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -405,28 +413,27 @@ class _DetailSurveyState extends State<DetailSurvey> {
                                 onConfirm: () async {
                                   final note =
                                       declineNoteController.text.trim();
-                                  Navigator.of(context).pop();
-                                  try {
-                                    await approvalController
-                                        .submitPlafonApproval(
-                                      trxSurvey: trxSurvey,
-                                      cifId: cifId,
-                                      judgment: 'DECLINED',
-                                      note: note,
-                                    );
-                                    inquryController.getSurveyList(
-                                        trxSurvey: trxSurvey);
-                                    Get.snackbar(
-                                      'Sukses',
-                                      'Plafon telah ditolak',
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white,
-                                    );
-                                  } catch (e) {
-                                    Get.snackbar(
-                                        'Error', 'Gagal submit penolakan: $e');
+                                  if (note.isEmpty) {
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.warning,
+                                      animType: AnimType.scale,
+                                      title: 'Catatan Kosong',
+                                      desc:
+                                          'Mohon isi catatan terlebih dahulu.',
+                                      btnOkOnPress: () {},
+                                      btnOkColor: Colors.orange,
+                                    ).show();
+                                    return; // Stop agar tidak lanjut submit
                                   }
+
+                                  Get.back();
+                                  await approvalController.submitPlafonApproval(
+                                    trxSurvey: trxSurvey,
+                                    cifId: cifId,
+                                    judgment: 'DECLINED',
+                                    note: note,
+                                  );
                                 },
                               ),
                             );

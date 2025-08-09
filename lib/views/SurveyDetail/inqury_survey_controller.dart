@@ -16,7 +16,9 @@ class InqurySurveyController extends GetxController {
   var collateralProofs = <CollateralProofModel>[].obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
-  var plafondJudgment = ''.obs; // Tambahkan untuk Content: "PLAF"
+  var plafondJudgment = ''.obs; 
+  var note = ''.obs; // Tambahkan variabel untuk menyimpan catatan
+  // Tambahkan untuk Content: "PLAF"
 
   String formatRupiah(String numberString) {
     if (numberString.isEmpty || numberString == '0' || numberString == '0.00') {
@@ -55,6 +57,7 @@ class InqurySurveyController extends GetxController {
       final selectedItem = inquryResponse.collaboration.items.firstWhere(
         (item) => item.content == 'PLAF',
         orElse: () => CollaborationItem(
+          note: '', // Tambahkan note untuk PLAF
           approvalNo: '',
           category: '',
           content: '',
@@ -64,6 +67,7 @@ class InqurySurveyController extends GetxController {
       );
       plafondJudgment.value = selectedItem
           .judgment; // Simpan judgment untuk PLAF (misalnya, "APPROVED-05323")
+      note.value = selectedItem.note; // Simpan catatan dari item PLAF
 
       print('PLAF Judgment: ${plafondJudgment.value}');
     } catch (e) {

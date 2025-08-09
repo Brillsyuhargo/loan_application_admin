@@ -79,16 +79,9 @@ class ApprovalService {
           } else {
             return ApprovalSurveyModel(
               responseCode: '05',
-              responseMessage:
-                  'Anda tidak memiliki akses untuk melakukan approval',
+              responseMessage: 'Mohon maaf Anda diluar wewenang ',
             );
           }
-        } else {
-          return ApprovalSurveyModel(
-            responseCode: '05',
-            responseMessage:
-                'Anda tidak memiliki akses untuk melakukan approval',
-          );
         }
       }
 
