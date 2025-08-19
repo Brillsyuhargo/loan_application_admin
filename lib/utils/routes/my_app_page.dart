@@ -7,6 +7,7 @@ import 'package:loan_application_admin/views/SurveyDetail/detail_anggota.dart';
 import 'package:loan_application_admin/views/SurveyDetail/detail_document.dart';
 import 'package:loan_application_admin/views/SurveyDetail/detail_survey.dart';
 import 'package:loan_application_admin/views/home/surveylist_admin.dart';
+import 'package:loan_application_admin/views/notif/notif_page.dart';
 
 class MyAppPage {
   static final List<GetPage> pages = [
@@ -18,5 +19,6 @@ class MyAppPage {
     GetPage(name: MyAppRoutes.surveyDetail, page: () => SurveyDetail()),
     GetPage(name: MyAppRoutes.detaildocumen, page: () => DetailDocument()),
     GetPage(name: MyAppRoutes.detailsurvey, page: () => DetailSurvey()),
+    GetPage(name: MyAppRoutes.notif, page: () => NotifPage()),
   ];
 }
