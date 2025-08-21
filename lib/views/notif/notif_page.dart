@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:loan_application_admin/core/theme/color.dart';
 import 'package:loan_application_admin/utils/routes/my_app_route.dart';
 import 'package:loan_application_admin/views/home/home_controller.dart';
-import 'package:loan_application_admin/widgets/survey_box.dart';
+import 'package:loan_application_admin/views/notif/notif_widget.dart';
 
 class NotifPage extends StatelessWidget {
   final HomeController controller = Get.find<HomeController>();
@@ -55,23 +55,17 @@ class NotifPage extends StatelessWidget {
 
               return GestureDetector(
                 onTap: () => Get.toNamed(
-                  MyAppRoutes.surveyDetail,
+                  MyAppRoutes.detailsurvey,
                   arguments: item,
                 ),
                 child: Stack(
                   children: [
-                    SurveyBox(
+                    NotificationBox(
                       name: item.fullName,
-                      date: DateFormat('yyyy-MMMM-dd', 'id_ID')
+                      date: DateFormat('dd-MMMM-yyyy', 'id_ID')
                           .format(item.application.trxDate),
-                      location: item.sectorCity,
-                      image: (item.document?.docPerson.isNotEmpty ?? false)
-                          ? item.document!.docPerson[0].img
-                          : 'https://salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png',
                       status: statusText,
                       statusColor: statusColor,
-                      plafond: item.application.plafond,
-                      aged: item.aged,
                     ),
                     // Titik merah indikator belum dibaca
                     Positioned(
