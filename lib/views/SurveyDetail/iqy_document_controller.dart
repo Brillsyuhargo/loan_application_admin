@@ -15,7 +15,35 @@ class IqyDocumentController extends GetxController {
   var documentModel = Rxn<Document>();
   var collaborationItems = <CollaborationItem>[].obs;
   var judgment = ''.obs;
-  var note = ''.obs; // Variabel untuk menyimpan judgment
+  var note = ''.obs;
+  var value = ''.obs;
+  var id_name = ''.obs;
+  var descript = ''.obs;
+
+  String formatRupiah(String numberString) {
+    if (numberString.isEmpty || numberString == '0' || numberString == '0.00') {
+      return '0';
+    }
+
+    final number =
+        double.tryParse(numberString.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+    if (number == 0) return '0';
+
+    final isWhole = number == number.roundToDouble();
+
+    final integerPart = number.truncate().toString().replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]}.',
+        );
+
+    if (isWhole) {
+      return integerPart; // Tanpa desimal
+    } else {
+      // Tambahkan desimal jika bukan .00
+      final decimal = number.toStringAsFixed(2).split('.')[1];
+      return '$integerPart,$decimal';
+    }
+  }
 
   void fetchDocuments({required String trxSurvey}) async {
     isLoading.value = true;
@@ -29,6 +57,7 @@ class IqyDocumentController extends GetxController {
       );
 
       documentModel.value = inquryResponse.document;
+      adddescript.value = inquryResponse.collateral.adddescript;
 
       ktpImage.value = documentModel.value?.docPerson.isNotEmpty ?? false
           ? documentModel.value!.docPerson[0].img
@@ -62,7 +91,11 @@ class IqyDocumentController extends GetxController {
       );
       judgment.value =
           selectedItem.judgment; // Simpan judgment (misalnya, "DECLINED-05323")
-      note.value = selectedItem.note; // Simpan judgment untuk digunakan di UI
+      note.value = selectedItem.note;
+      value.value = inquryResponse
+          .collateral.value; // Simpan judgment untuk digunakan di UI
+      id_name.value = inquryResponse.collateral.idName;
+      descript.value = inquryResponse.collateral.documentType;
 
       print('Selected Judgment: ${judgment.value}');
     } catch (e) {

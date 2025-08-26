@@ -241,14 +241,14 @@ class _DetailSurveyState extends State<DetailSurvey> {
                         keyboardType: TextInputType.text,
                       ),
                       SizedBox(height: 4),
-                      FieldReadonly(
-                        label: 'Category Agunan',
-                        width: double.infinity,
-                        height: 50,
-                        value: inquryController.id_name.value,
-                        keyboardType: TextInputType.text,
-                      ),
-                      SizedBox(height: 4),
+                      // FieldReadonly(
+                      //   label: 'Category Agunan',
+                      //   width: double.infinity,
+                      //   height: 50,
+                      //   value: inquryController.id_name.value,
+                      //   keyboardType: TextInputType.text,
+                      // ),
+                      // SizedBox(height: 4),
                       FieldReadonly(
                         label: 'Category Document',
                         width: double.infinity,

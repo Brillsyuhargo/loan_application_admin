@@ -11,6 +11,7 @@ class InqurySurveyController extends GetxController {
   var income = ''.obs;
   var asset = ''.obs;
   var expenses = ''.obs;
+  final descript = ''.obs;
   var installment = ''.obs;
   var inquiryModel = Rxn<InquirySurveyModel>();
   var collateralProofs = <CollateralProofModel>[].obs;
@@ -52,6 +53,7 @@ class InqurySurveyController extends GetxController {
       income.value = inquryResponse.additionalInfo.income;
       asset.value = inquryResponse.additionalInfo.asset;
       installment.value = inquryResponse.additionalInfo.installment;
+      descript.value = inquryResponse.collateral.adddescript;
 
       // Filter item dengan Content: "PLAF"
       final selectedItem = inquryResponse.collaboration.items.firstWhere(
