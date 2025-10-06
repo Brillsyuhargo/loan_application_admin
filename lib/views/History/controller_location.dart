@@ -5,7 +5,7 @@ class Location_filterController extends GetxController {
   var provinces = <Map<String, dynamic>>[].obs; // Explicit type
   var regencies = <Map<String, dynamic>>[].obs; // Explicit type
   var districts = <Map<String, dynamic>>[].obs; // Explicit type
-  var villages = <Map<String, dynamic>>[].obs; // Explicit type
+  var villages = <Map<String, dynamic>>[].obs; 
 
   var selectedProvinceId = ''.obs;
   var selectedProvinceName = ''.obs;
